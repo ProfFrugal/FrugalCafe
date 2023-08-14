@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FrugalCafe.Posts;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,10 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
+            TestSubstring.Test();
+
+            return;
+
             StringSplitter.Test();
 
             return;
