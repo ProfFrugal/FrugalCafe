@@ -42,26 +42,26 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppInfoCache.cs" />
-    <Compile Include="DictionaryCorruption.cs" />
-    <Compile Include="Json.cs" />
+    <Compile Include="Posts\AppInfoCache.cs" />
+    <Compile Include="Posts\DictionaryCorruption.cs" />
+    <Compile Include="Posts\Json.cs" />
     <Compile Include="Common\OpenList.cs" />
-    <Compile Include="NSquare.cs" />
-    <Compile Include="RegularExpression.cs" />
-    <Compile Include="StringCompare.cs" />
+    <Compile Include="Posts\NSquare.cs" />
+    <Compile Include="Posts\RegularExpression.cs" />
+    <Compile Include="Posts\StringCompare.cs" />
     <Compile Include="Common\StringSplitter.cs" />
     <Compile Include="Common\Substring.cs" />
-    <Compile Include="TestJsonContractResolver.cs" />
-    <Compile Include="LinqIsNotQuick.cs" />
-    <Compile Include="PerfTest.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Posts\TestJsonContractResolver.cs" />
+    <Compile Include="Posts\LinqIsNotQuick.cs" />
+    <Compile Include="Common\PerfTest.cs" />
+    <Compile Include="Posts\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SlowInit.cs" />
-    <Compile Include="StringIntern.cs" />
+    <Compile Include="Posts\SlowInit.cs" />
+    <Compile Include="Posts\StringIntern.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="MermoryCacheLeak.cs" />
+    <Compile Include="Posts\MermoryCacheLeak.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
