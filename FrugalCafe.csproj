@@ -39,22 +39,18 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppInfoCache.cs" />
     <Compile Include="DictionaryCorruption.cs" />
     <Compile Include="Json.cs" />
-    <Compile Include="OpenList.cs" />
+    <Compile Include="Common\OpenList.cs" />
     <Compile Include="NSquare.cs" />
     <Compile Include="RegularExpression.cs" />
     <Compile Include="StringCompare.cs" />
-    <Compile Include="StringSplitter.cs" />
+    <Compile Include="Common\StringSplitter.cs" />
+    <Compile Include="Common\Substring.cs" />
     <Compile Include="TestJsonContractResolver.cs" />
     <Compile Include="LinqIsNotQuick.cs" />
     <Compile Include="PerfTest.cs" />
