@@ -43,6 +43,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ComboKey.cs" />
+    <Compile Include="Common\HashHelpers.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
     <Compile Include="Posts\DictionaryCorruption.cs" />
     <Compile Include="Posts\Json.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Posts\StringCompare.cs" />
     <Compile Include="Common\StringSplitter.cs" />
     <Compile Include="Common\Substring.cs" />
+    <Compile Include="Posts\TestComboKey.cs" />
     <Compile Include="Posts\TestJsonContractResolver.cs" />
     <Compile Include="Posts\LinqIsNotQuick.cs" />
     <Compile Include="Common\PerfTest.cs" />

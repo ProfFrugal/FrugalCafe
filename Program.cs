@@ -9,6 +9,10 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
+            TestComboKey.Test();
+
+            return;
+
             TestSubstring.Test();
 
             return;
