@@ -13,8 +13,6 @@ namespace FrugalCafe.Posts
         {
             string phrase = "A quick brown fox jumps over the lazy dog.";
 
-            phrase = phrase + " " + phrase;
-
             int count = 1000 * 1000;
 
             {
