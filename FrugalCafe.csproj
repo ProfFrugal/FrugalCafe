@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Extensions.Primitives, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Common\ComboKey.cs" />
     <Compile Include="Common\HashHelpers.cs" />
+    <Compile Include="Common\StringComparer32.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
     <Compile Include="Posts\DictionaryCorruption.cs" />
     <Compile Include="Posts\Json.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Posts\StringCompare.cs" />
     <Compile Include="Common\StringSplitter.cs" />
     <Compile Include="Common\Substring.cs" />
+    <Compile Include="Posts\StringComparerTest.cs" />
     <Compile Include="Posts\TestComboKey.cs" />
     <Compile Include="Posts\TestJsonContractResolver.cs" />
     <Compile Include="Posts\LinqIsNotQuick.cs" />
