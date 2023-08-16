@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace FrugalCafe
 {
@@ -64,6 +65,17 @@ namespace FrugalCafe
 
             _count = 0;
         }
+
+        public void Reverse()
+        {
+            for (int i = 0; i < _count / 2; i++)
+            {
+                T t = _items[i];
+
+                _items[i] = _items[_count - 1 - i];
+                _items[_count - 1 - i] = t;
+            }
+        }
     }
 
     public static class ThrowHelper
@@ -77,6 +89,29 @@ namespace FrugalCafe
 
     public class StringList : OpenList<string>
     {
+        private static StringList reusedList;
+
+        public static StringList Rent()
+        {
+            var result = Interlocked.Exchange(ref StringList.reusedList, null);
+
+            if (result == null)
+            {
+                result = new StringList();
+            }
+            else
+            {
+                result.Clear();
+            }
+
+            return result;
+        }
+
+        public static void Return(StringList list)
+        {
+            StringList.reusedList = list;
+        }
+
         public override string ToString() 
         { 
             switch (_count)
@@ -97,6 +132,31 @@ namespace FrugalCafe
                     return _items[0] + _items[1] + _items[2] + _items[3];
 
                 default:
+                    return string.Join(string.Empty, _items, 0, _count);
+            }
+        }
+
+        public string ReverseConcat()
+        {
+            switch (_count)
+            {
+                case 0:
+                    return string.Empty;
+
+                case 1:
+                    return _items[0];
+
+                case 2:
+                    return _items[1] + _items[0];
+
+                case 3:
+                    return _items[2] + _items[1] + _items[1];
+
+                case 4:
+                    return _items[3] + _items[2] + _items[1] + _items[0];
+
+                default:
+                    base.Reverse();
                     return string.Join(string.Empty, _items, 0, _count);
             }
         }

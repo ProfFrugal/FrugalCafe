@@ -16,7 +16,8 @@ namespace FrugalCafe.Posts
 
             PerfTest.MeasurePerf(() => phrase.GetHashCode(), "string.GetHashCode", count);
 
-            PerfTest.MeasurePerf(() => StringComparer32.Instance.GetHashCode(phrase), "StringCompare32.GetHashCode", count);
+            PerfTest.MeasurePerf(() => StringComparer32.Instance.GetHashCode(phrase), 
+                "StringCompare32.GetHashCode", count);
         }
     }
 }
