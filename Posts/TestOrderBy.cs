@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FrugalCafe.Posts
 {
@@ -25,7 +22,7 @@ namespace FrugalCafe.Posts
 
             var results2 = new List<Product>(products);
 
-            results.Sort((x, y) =>
+            results2.Sort((x, y) =>
             { 
                 int diff = x.Name.CompareTo(y.Name);
 
