@@ -124,13 +124,13 @@ namespace ICSharpCode.ILSpy
 
     internal class Parameter
     {
-        public string Name;
+        public string Name = string.Empty;
     }
 
     internal class  TypeDefinitionHandle
     {
-        public string Name;
-        public string Namespace;
+        public string Name = string.Empty;
+        public string Namespace = string.Empty;
 
         public TypeDefinitionHandle GetDeclaringType()
         {
