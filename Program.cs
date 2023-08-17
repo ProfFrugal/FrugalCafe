@@ -9,6 +9,10 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
+            TestMemoryCache.Test();
+
+            return;
+
             StringComparerTest.Test();
 
             return;
