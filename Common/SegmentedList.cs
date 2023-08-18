@@ -73,16 +73,6 @@ namespace FrugalCafe
 
         public int Count => _count;
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return new Enumerator(this);
-        }
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return new Enumerator(this);
-        }
-
         private void EnsureSegment()
         {
             int segment = _count >> _segmentShift;
@@ -105,14 +95,21 @@ namespace FrugalCafe
             }
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
         public struct Enumerator : IEnumerator<T>, IDisposable, IEnumerator
         {
             private readonly SegmentedList<T> _list;
-
             private int _index;
-
             private T _current;
-
             public T Current => _current;
 
             object IEnumerator.Current
@@ -135,10 +132,6 @@ namespace FrugalCafe
                 _current = default(T);
             }
 
-            public void Dispose()
-            {
-            }
-
             public bool MoveNext()
             {
                 SegmentedList<T> list = _list;
@@ -147,7 +140,7 @@ namespace FrugalCafe
                 {
                     _current = list._segments[_index >> list._segmentShift][_index & list._segmentMask];
                     _index++;
-                    
+
                     return true;
                 }
 
@@ -155,6 +148,10 @@ namespace FrugalCafe
                 _current = default(T);
 
                 return false;
+            }
+
+            public void Dispose()
+            {
             }
 
             void IEnumerator.Reset()
