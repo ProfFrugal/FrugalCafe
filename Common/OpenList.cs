@@ -78,15 +78,6 @@ namespace FrugalCafe
         }
     }
 
-    public static class ThrowHelper
-    {
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void ThrowIndexOutOfRangeException()
-        {
-            throw new IndexOutOfRangeException();
-        }
-    }
-
     public class StringList : OpenList<string>
     {
         private static StringList reusedList;

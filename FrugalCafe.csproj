@@ -87,7 +87,9 @@
   <ItemGroup>
     <Compile Include="Common\ComboKey.cs" />
     <Compile Include="Common\HashHelpers.cs" />
+    <Compile Include="Common\SegmentedList.cs" />
     <Compile Include="Common\StringComparer32.cs" />
+    <Compile Include="Common\ThrowHelper.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
     <Compile Include="Posts\CSharpLanguage.cs" />
     <Compile Include="Posts\DictionaryCorruption.cs" />
