@@ -9,6 +9,10 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
+            TestSegmentedList.Perf();
+
+            return;
+
             TestMemoryCache.Test();
 
             return;

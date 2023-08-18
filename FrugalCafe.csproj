@@ -107,6 +107,7 @@
     <Compile Include="Common\PerfTest.cs" />
     <Compile Include="Posts\TestMemoryCache.cs" />
     <Compile Include="Posts\TestOrderBy.cs" />
+    <Compile Include="Posts\TestSegmentedList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Posts\TestSubstring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
