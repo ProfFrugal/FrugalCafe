@@ -29,13 +29,16 @@ namespace FrugalCafe
 
             ICollection values = collection.Values;
 
-            var counters = new string[values.Count];
+            if ((_counters == null) || (_counters.Length != values.Count))
+            {
+                _counters = new string[values.Count];
+            }
 
             int counter = 0;
 
             foreach (InstanceDataCollection v in values)
             {
-                counters[counter] = v.CounterName;
+                _counters[counter] = v.CounterName;
 
                 foreach (InstanceData d in v.Values)
                 {
@@ -51,14 +54,17 @@ namespace FrugalCafe
 
                 counter++;
             }
+        }
 
-            string fileName = "c:\\temp\\clrmemory.csv";
+        public void Dump(string directory)
+        { 
+            string fileName = directory = "\\" + Category + ".csv";
 
             using (var writer = new StreamWriter(fileName))
             {
                 writer.Write("Process");
 
-                foreach (string c in counters)
+                foreach (string c in _counters)
                 {
                     writer.Write(',');
                     writer.Write('"');
