@@ -18,7 +18,8 @@ namespace FrugalCafe
 
             string fileName = category.Dump("c:\\temp");
 
-            Console.WriteLine("'{0}' {1:N0} instances, '{2}' {3:N3} ms", category.Category, count, fileName, span.TotalMilliseconds);
+            Console.WriteLine("'{0}' {1:N0} instances, '{2}' {3:N3} ms", category.Category, 
+                count, fileName, span.TotalMilliseconds);
         }
 
         public static void Test()

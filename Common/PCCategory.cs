@@ -10,7 +10,8 @@ namespace FrugalCafe
     {
         private readonly PerformanceCounterCategory _cat;
 
-        private readonly Dictionary<string, float[]> _processMap = new Dictionary<string, float[]>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, float[]> _processMap = 
+            new Dictionary<string, float[]>(StringComparer.OrdinalIgnoreCase);
         private string[] _counters;
 
         public PCCategory(string category)
