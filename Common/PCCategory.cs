@@ -62,7 +62,7 @@ namespace FrugalCafe
             return count;
         }
 
-        public void Dump(string directory)
+        public string Dump(string directory)
         { 
             string fileName = directory + "\\" + Category.Replace(" ", string.Empty) + ".csv";
 
@@ -102,7 +102,7 @@ namespace FrugalCafe
                 }
             }
 
-            Console.WriteLine("{0} generated.", fileName);
+            return fileName;
         }
     }
 }

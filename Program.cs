@@ -9,7 +9,7 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
-            TestPCCatetory.Test();
+            TestPCCategory.Test();
             return;
 
             TestSegmentedList.Perf();
