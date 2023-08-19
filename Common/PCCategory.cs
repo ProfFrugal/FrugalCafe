@@ -21,7 +21,7 @@ namespace FrugalCafe
 
         public string Category { get; }
 
-        public void Read()
+        public int Read()
         {
             _processMap.Clear();
 
@@ -34,11 +34,13 @@ namespace FrugalCafe
                 _counters = new string[values.Count];
             }
 
-            int counter = 0;
+            int index = 0;
+
+            int count = 0;
 
             foreach (InstanceDataCollection v in values)
             {
-                _counters[counter] = v.CounterName;
+                _counters[index] = v.CounterName;
 
                 foreach (InstanceData d in v.Values)
                 {
@@ -49,16 +51,20 @@ namespace FrugalCafe
                         _processMap.Add(d.InstanceName, readings);
                     }
 
-                    readings[counter] = CounterSample.Calculate(CounterSample.Empty, d.Sample);
+                    count++;
+
+                    readings[index] = CounterSample.Calculate(CounterSample.Empty, d.Sample);
                 }
 
-                counter++;
+                index++;
             }
+
+            return count;
         }
 
         public void Dump(string directory)
         { 
-            string fileName = directory = "\\" + Category + ".csv";
+            string fileName = directory + "\\" + Category.Replace(" ", string.Empty) + ".csv";
 
             using (var writer = new StreamWriter(fileName))
             {
