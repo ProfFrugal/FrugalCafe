@@ -50,6 +50,9 @@
     <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.ObjectPool, Version=7.0.10.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.ObjectPool.7.0.10\lib\net462\Microsoft.Extensions.ObjectPool.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Options, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Options.7.0.0\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
@@ -90,6 +93,7 @@
     <Compile Include="Common\HashHelpers.cs" />
     <Compile Include="Common\PCCategory.cs" />
     <Compile Include="Common\SegmentedList.cs" />
+    <Compile Include="Common\StringBuilderExtensions.cs" />
     <Compile Include="Common\StringComparer32.cs" />
     <Compile Include="Common\ThrowHelper.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Posts\TestOrderBy.cs" />
     <Compile Include="Posts\TestPCCategory.cs" />
     <Compile Include="Posts\TestSegmentedList.cs" />
+    <Compile Include="Posts\TestStringBuilderCache.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Posts\TestSubstring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,8 +9,11 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
-            TestEnumHelper.Test();
+            TestStringBuilderCache.Test();
             return;
+
+            //TestEnumHelper.Test();
+            //return;
 
             TestPCCategory.Test();
             return;
