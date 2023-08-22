@@ -104,6 +104,7 @@
     <Compile Include="Common\OpenList.cs" />
     <Compile Include="Posts\NSquare.cs" />
     <Compile Include="Posts\RegularExpression.cs" />
+    <Compile Include="Posts\ReplaceChunk.cs" />
     <Compile Include="Posts\StringCompare.cs" />
     <Compile Include="Common\StringSplitter.cs" />
     <Compile Include="Common\Substring.cs" />

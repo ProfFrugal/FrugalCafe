@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.ObjectPool;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -8,6 +9,8 @@ namespace FrugalCafe
 {
     public static class StringBuilderExtensions
     {
+        public const string HexDigits = "0123456789abcdef";
+
         public const int MaximumCharCountNoLoh = (85000 - 64) / 2;
 
         public readonly static ObjectPool<StringBuilder> BuilderPool = 
@@ -82,6 +85,34 @@ namespace FrugalCafe
                 builder.Append(text, start, len);
                 start += len;
                 length -= len;
+            }
+
+            return builder;
+        }
+
+        public static StringBuilder AppendJoin(this StringBuilder builder, IReadOnlyList<string> values, string separator = ", ")
+        {
+            for (int i = 0; i < values.Count; i++)
+            {
+                if (i != 0)
+                {
+                    builder.Append(separator);
+                }
+
+                builder.Append(values[i]);
+            }
+
+            return builder;
+        }
+
+        public static StringBuilder AppendHex(this StringBuilder builder, byte[] data)
+        {
+            builder.Append("0x");
+
+            foreach (byte b in data)
+            {
+                builder.Append(HexDigits[b >> 4]);
+                builder.Append(HexDigits[b & 15]);
             }
 
             return builder;
