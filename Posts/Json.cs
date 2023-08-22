@@ -142,25 +142,5 @@ namespace FrugalCafe
 
             return string.Join(string.Empty, list, 0, count);
         }
-
-        public static StringBuilder SplitAppend(this StringBuilder builder, string text)
-        {
-            if (text != null)
-            {
-                int length = text.Length;
-                int pos = 0;
-
-                while (length > 0)
-                {
-                    int len = Math.Min(42000, length);
-
-                    builder.Append(text, pos, len);
-                    pos += len;
-                    length -= len;
-                }
-            }
-
-            return builder;
-        }
     }
 }

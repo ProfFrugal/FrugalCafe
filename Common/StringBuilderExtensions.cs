@@ -1,13 +1,21 @@
 ﻿using Microsoft.Extensions.ObjectPool;
+using System;
+using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace FrugalCafe
 {
     public static class StringBuilderExtensions
     {
+        public const int MaximumCharCountNoLoh = (85000 - 64) / 2;
+
         public readonly static ObjectPool<StringBuilder> BuilderPool = 
             (new DefaultObjectPoolProvider()).CreateStringBuilderPool(
-                initialCapacity:256, maximumRetainedCapacity: 64 * 1024);
+                initialCapacity:256, 
+                maximumRetainedCapacity: StringBuilderExtensions.MaximumCharCountNoLoh);
+
+        private static char[] reusedBuffer;
 
         public static StringBuilder AcquireBuilder()
         {
@@ -36,40 +44,139 @@ namespace FrugalCafe
             return result;
         }
 
-        public static string FrugalFormat(this string format, object arg0)
+        public static StringBuilder AppendNoLoh(this StringBuilder builder, string text)
         {
-            var builder = AcquireBuilder();
+            if (text != null)
+            {
+                builder.AppendNoLoh(text, 0, text.Length);
+            }
 
-            builder.AppendFormat(format, arg0);
+            return builder;
+        }
+
+        public static StringBuilder AppendNoLoh(this StringBuilder builder, string text, int start, int length)
+        {
+            while (length > 0)
+            {
+                int len = Math.Min(StringBuilderExtensions.MaximumCharCountNoLoh, length);
+
+                builder.Append(text, start, len);
+                start += len;
+                length -= len;
+            }
+
+            return builder;
+        }
+
+        public static StringBuilder AppendNoLoh(this StringBuilder builder, char[] text)
+        {
+            return AppendNoLoh(builder, text, 0, text.Length);
+        }
+
+        public static StringBuilder AppendNoLoh(this StringBuilder builder, char[] text, int start, int length)
+        {
+            while (length > 0)
+            {
+                int len = Math.Min(StringBuilderExtensions.MaximumCharCountNoLoh, length);
+
+                builder.Append(text, start, len);
+                start += len;
+                length -= len;
+            }
+
+            return builder;
+        }
+
+        public static StringBuilder FrugalAppend(this StringBuilder builder, long value)
+        {
+            if (value < 0)
+            {
+                builder.Append('-');
+
+                return builder.FrugalAppend((ulong)(-value));
+            }
+
+            return builder.FrugalAppend((ulong)(value));
+        }
+
+        public unsafe static StringBuilder FrugalAppend(this StringBuilder builder, ulong value)
+        {
+            char* buffer = stackalloc char[20];
+
+            int len = 0;
+
+            do
+            {
+                buffer[len++] = (char)('0' + value % 10);
+                value /= 10;
+            }
+            while (value != 0);
+
+            for (int i = len - 1; i >= 0; i--)
+            {
+                builder.Append(buffer[i]);
+            }
+
+            return builder;
+        }
+
+        public static void WriteToNoLoh(this StringBuilder builder, TextWriter writer)
+        {
+            char[] buffer = AcquireCharBuffer(4096);
+
+            int length = builder.Length;
+
+            int start = 0;
+
+            while (length > 0)
+            {
+                int len = Math.Min(buffer.Length, length);
+
+                builder.CopyTo(start, buffer, 0, len);
+
+                writer.Write(buffer, 0, len);
+                start += len;
+                length -= len;
+            }
+
+            buffer.ReleaseCharBuffer();
+        }
+
+        public static string FrugalReadToEnd(this TextReader reader)
+        {
+            char[] buffer = AcquireCharBuffer();
+
+            StringBuilder builder = AcquireBuilder();
+
+            int charCount;
+            while ((charCount = reader.Read(buffer, 0, buffer.Length)) != 0)
+            {
+                builder.Append(buffer, 0, charCount);
+            }
+
+            buffer.ReleaseCharBuffer();
 
             return builder.ToStringAndRelease();
         }
 
-        public static string FrugalFormat(this string format, object arg0, object arg1)
+        public static char[] AcquireCharBuffer(int capacity = 4096)
         {
-            var builder = AcquireBuilder();
+            char[] buffer = Interlocked.Exchange(ref StringBuilderExtensions.reusedBuffer, null);
 
-            builder.AppendFormat(format, arg0, arg1);
+            if ((buffer == null) || (buffer.Length < capacity))
+            {
+                buffer = new char[capacity];
+            }
 
-            return builder.ToStringAndRelease();
+            return buffer;
         }
 
-        public static string FrugalFormat(this string format, object arg0, object arg1, object arg2)
+        public static void ReleaseCharBuffer(this char[] buffer)
         {
-            var builder = AcquireBuilder();
-
-            builder.AppendFormat(format, arg0, arg1, arg2);
-
-            return builder.ToStringAndRelease();
-        }
-
-        public static string FrugalFormat(this string format, params object[] args)
-        {
-            var builder = AcquireBuilder();
-
-            builder.AppendFormat(format, args);
-
-            return builder.ToStringAndRelease();
+            if (buffer != null)
+            {
+                StringBuilderExtensions.reusedBuffer = buffer;
+            }
         }
     }
 }
