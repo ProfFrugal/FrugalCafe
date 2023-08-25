@@ -14,23 +14,35 @@ namespace FrugalCafe.Posts
         {
             CSharpDecompiler decompiler = new CSharpDecompiler(type.Assembly.Location, _settings);
 
-            SyntaxTree syntaxTree = decompiler.DecompileType(
-                new ICSharpCode.Decompiler.TypeSystem.FullTypeName(type.FullName));
+            string result = null;
 
-            StringWriter w = new StringWriter();
-            syntaxTree.AcceptVisitor(
-                new CSharpOutputVisitor(w, _settings.CSharpFormattingOptions));
+            int count = 100;
 
-            string decompilation_log = "decompilation_log";
-            object logger = "logger\r\n";
+            Console.WriteLine(type);
 
-            w.WriteLine("#if false // " + decompilation_log);
-            w.Write(logger.ToString());
-            w.WriteLine("#endif");
+            PerfTest.MeasurePerf(
+                () =>
+                {
+                    SyntaxTree syntaxTree = decompiler.DecompileType(
+                        new ICSharpCode.Decompiler.TypeSystem.FullTypeName(type.FullName));
 
-            string result = w.ToString();
+                    StringWriter w = new StringWriter();
+                    syntaxTree.AcceptVisitor(
+                        new CSharpOutputVisitor(w, _settings.CSharpFormattingOptions));
 
-            Console.Write(result);
+                    string decompilation_log = "decompilation_log";
+                    object logger = "logger\r\n";
+
+                    w.WriteLine("#if false // " + decompilation_log);
+                    w.Write(logger.ToString());
+                    w.WriteLine("#endif");
+
+                    result = w.ToString();
+                },
+                "Decompile",
+                count);
+
+            Console.Write("{0} chars", result.Length);
         }
     }
 }
