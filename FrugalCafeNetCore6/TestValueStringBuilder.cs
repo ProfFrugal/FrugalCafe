@@ -6,20 +6,32 @@ namespace FrugalCafeNetCore6
 {
     internal class TestValueStringBuilder
     {
-        public static void Test()
+        public static List<object> GenerateData(int count)
         {
             var map = new Dictionary<string, string>();
-
-            int count = 60000;
 
             for (int i = 0; i < count; i++)
             {
                 map.Add("key_" + i, (i * i).ToString());
             }
 
-            string result = string.Join(",", map.Select(kv => kv.Key + "=" + kv.Value));
+            List<object> data = new List<object>(count);
 
-            count = 100;
+            foreach (var kv in map)
+            {
+                data.Add(kv.Key + "=" + kv.Value);
+            }
+
+            return data;
+        }
+
+        public static void Test()
+        {
+            List<object> data = GenerateData(60000);
+
+            string result = string.Join(",", data);
+
+            int count = 100;
 
             for (int test = 0; test < 2; test++)
             {
@@ -35,11 +47,11 @@ namespace FrugalCafeNetCore6
 
                         if (test == 0)
                         {
-                            result = OldJoin(",", map.Select(kv => kv.Key + "=" + kv.Value));
+                            result = DotNetFrameworkJoin(",", data);
                         }
                         else
                         {
-                            result = string.Join(",", map.Select(kv => kv.Key + "=" + kv.Value));
+                            result = string.Join(",", data);
                         }
                     }));
                 }
@@ -51,9 +63,23 @@ namespace FrugalCafeNetCore6
             }
         }
 
-        static string OldJoin(string separator, IEnumerable<string> list)
+        [ThreadStatic]
+        static StringBuilder? reusedBuilder;
+
+        static string DotNetFrameworkJoin(string separator, IEnumerable<object> list)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder? builder = reusedBuilder;
+
+            reusedBuilder = null;
+
+            if (builder == null)
+            {
+                builder = new StringBuilder();
+            }
+            else
+            {
+                builder.Clear();
+            }
 
             bool first = true;
 
@@ -71,7 +97,14 @@ namespace FrugalCafeNetCore6
                 builder.Append(v);
             }
 
-            return builder.ToString();
+            string result = builder.ToString();
+
+            if (builder.Capacity < 360)
+            {
+                reusedBuilder = builder;
+            }
+
+            return result;
         }
     }
 }
