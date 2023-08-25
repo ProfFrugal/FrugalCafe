@@ -3,5 +3,5 @@ using FrugalCafeNetCore6;
 
 Console.WriteLine("Hello, World!");
 
-TestValueStringBuilder.Test();
+TestValueStringBuilder.PerfTest();
 

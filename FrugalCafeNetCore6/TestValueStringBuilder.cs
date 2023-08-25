@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.Text;
 
@@ -61,6 +62,89 @@ namespace FrugalCafeNetCore6
                 Console.WriteLine("{0:N0}", result.Length);
                 Console.WriteLine("{0} threads, {1:N3} mb", set.Count, GC.GetTotalMemory(true) / 1024 / 1024.0);
             }
+        }
+
+        public static void PerfTest()
+        {
+            List<object> data = GenerateData(60000);
+
+            int repeat = 1000;
+
+            string result = string.Empty;
+
+            FrugalCafe.PerfTest.MeasurePerf(
+                () => 
+                {
+                    result = string.Join(",", data);
+                },
+                "string.Join using ValueStringBuilder", repeat);
+
+            Console.WriteLine("{0:N0} chars", result.Length);
+
+            FrugalCafe.PerfTest.MeasurePerf(
+                () =>
+                {
+                    result = LargeBuilderJoin(",", data);
+                },
+                "LargeBuilderJoin", repeat);
+
+            Console.WriteLine("{0:N0} chars", result.Length);
+
+            if (largeStringPool.TryPeek(out StringBuilder? builder))
+            {
+                Console.WriteLine("Builder capacity: {0:N0} chars", builder.Capacity);
+            }
+        }
+
+        static ConcurrentQueue<StringBuilder> largeStringPool = new ConcurrentQueue<StringBuilder>();
+
+        public static StringBuilder AcquireLargeBuilder()
+        {
+            if (largeStringPool.TryDequeue(out StringBuilder? builder))
+            {
+                builder.Clear();
+            }
+            else
+            {
+                builder = new StringBuilder();
+            }
+
+            return builder;
+        }
+
+        public static void ReleaseLargeBuilder(StringBuilder builder) 
+        {
+            if (builder != null)
+            {
+                largeStringPool.Enqueue(builder);
+            }
+        }
+
+        static string LargeBuilderJoin(string separator, IEnumerable<object> list)
+        {
+            StringBuilder? builder = AcquireLargeBuilder();
+
+            bool first = true;
+
+            foreach (var v in list)
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    builder.Append(separator);
+                }
+
+                builder.Append(v);
+            }
+
+            string result = builder.ToString();
+
+            ReleaseLargeBuilder(builder);
+
+            return result;
         }
 
         [ThreadStatic]
