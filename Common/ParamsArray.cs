@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Runtime.CompilerServices;
 
-namespace FrugalCafe.Common
+namespace FrugalCafe
 {
     public struct ParamsArray<T>
     {
@@ -49,17 +48,19 @@ namespace FrugalCafe.Common
 
         public int Length => this.args.Length;
 
-        public T this[int index] => index == 0 ? this.arg0 : GetAtSlow(index);
-
-        private T GetAtSlow(int index)
+        public T this[int index]
         {
-            if (index == 1)
-                return this.arg1;
-
-            if (index == 2)
-                return this.arg2;
-
-            return this.args[index];
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                switch (index)
+                {
+                    case 0: return this.arg0;
+                    case 1: return this.arg1;
+                    case 2: return this.arg2;
+                    default: return this.args[index];
+                }
+            }
         }
     }
 }

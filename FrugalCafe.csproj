@@ -100,12 +100,14 @@
     <Compile Include="Common\ComboKey.cs" />
     <Compile Include="Common\EnumHelper.cs" />
     <Compile Include="Common\HashHelpers.cs" />
+    <Compile Include="Common\ISimpleStringBuilder.cs" />
     <Compile Include="Common\ParamsArray.cs" />
     <Compile Include="Common\PCCategory.cs" />
     <Compile Include="Common\SegmentedList.cs" />
     <Compile Include="Common\StringBuilderExtensions.cs" />
     <Compile Include="Common\StringComparer32.cs" />
     <Compile Include="Common\StringExtensions.cs" />
+    <Compile Include="Common\StringFormatter.cs" />
     <Compile Include="Common\ThrowHelper.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
     <Compile Include="Posts\CSharpLanguage.cs" />
