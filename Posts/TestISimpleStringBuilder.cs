@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FrugalCafe
 {
-    public class TextWriterWrapper : ISimpleStringBuilder
+    public struct TextWriterWrapper : ISimpleStringBuilder
     {
         private TextWriter _writer;
         public TextWriterWrapper(TextWriter writer) 

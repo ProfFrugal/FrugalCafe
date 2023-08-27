@@ -12,7 +12,11 @@ namespace FrugalCafe
             throw new FormatException("Format string is not in correct format.");
         }
 
-        public static void AppendFormat<T>(this T builder, string format, ParamsArray<object> args, IFormatProvider provider = null)
+        public static void AppendFormat<T>(
+            this T builder, 
+            string format, 
+            ParamsArray<object> args, 
+            IFormatProvider provider = null)
             where T : ISimpleStringBuilder
         {
             if (format == null)
