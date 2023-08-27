@@ -36,13 +36,14 @@ namespace FrugalCafe
     {
         public static void Test()
         {
-            string format = "A {0} fox jumps over the {1} dog.";
+            string format = "A {0} fox jumps over the {1} dog. {2:N2}";
 
-            string out1 = string.Format(format, "quick", "brown");
+            string out1 = string.Format(format, "quick", "brown", format.Length);
 
             StringWriter writer = new StringWriter();
 
-            (new TextWriterWrapper(writer)).AppendFormat(format, new ParamsArray<object>("quick", "brown"));
+            (new TextWriterWrapper(writer)).AppendFormat(
+                format, new ParamsArray<object>("quick", "brown", format.Length));
 
             string out2 = writer.ToString();
 
