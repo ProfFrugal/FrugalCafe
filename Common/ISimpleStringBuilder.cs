@@ -6,7 +6,19 @@ namespace FrugalCafe
 {
     public interface ISimpleStringBuilder
     {
+        /// <summary>
+        /// Append a string from arguments
+        /// </summary>
         void Append(string value);
-        void Append(char value, int repeat = 1);
+
+        /// <summary>
+        /// Append a character from formatting string.
+        /// </summary>
+        void Append(char value);
+
+        /// <summary>
+        /// Add white space padding
+        /// </summary>
+        void Pad(int repeat);
     }
 }

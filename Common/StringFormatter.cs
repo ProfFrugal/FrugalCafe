@@ -12,7 +12,7 @@ namespace FrugalCafe
             throw new FormatException("Format string is not in correct format.");
         }
 
-        public static void AppendFormat<T>(this T builder, IFormatProvider provider, string format, ParamsArray<object> args)
+        public static void AppendFormat<T>(this T builder, string format, ParamsArray<object> args, IFormatProvider provider = null)
             where T : ISimpleStringBuilder
         {
             if (format == null)
@@ -38,7 +38,6 @@ namespace FrugalCafe
                 while (pos < len)
                 {
                     ch = format[pos];
-
                     pos++;
 
                     if (ch == '}')
@@ -219,7 +218,7 @@ namespace FrugalCafe
                 pos++;
 
                 string sFmt = null;
-                string s = null;
+                string argString = null;
 
                 if (cf != null)
                 {
@@ -228,10 +227,10 @@ namespace FrugalCafe
                         sFmt = fmtBuilder.ToString();
                     }
 
-                    s = cf.Format(sFmt, arg, provider);
+                    argString = cf.Format(sFmt, arg, provider);
                 }
 
-                if (s == null)
+                if (argString == null)
                 {
                     IFormattable formattableArg = arg as IFormattable;
 
@@ -242,11 +241,11 @@ namespace FrugalCafe
                             sFmt = fmtBuilder.ToString();
                         }
 
-                        s = formattableArg.ToString(sFmt, provider);
+                        argString = formattableArg.ToString(sFmt, provider);
                     }
                     else if (arg != null)
                     {
-                        s = arg.ToString();
+                        argString = arg.ToString();
                     }
                 }
 
@@ -255,23 +254,23 @@ namespace FrugalCafe
                     fmtBuilder.Release();
                 }
 
-                if (s == null)
+                if (argString == null)
                 {
-                    s = string.Empty;
+                    argString = string.Empty;
                 }
 
-                int pad = width - s.Length;
+                int pad = width - argString.Length;
 
                 if (!leftJustify && pad > 0)
                 {
-                    builder.Append(' ', pad);
+                    builder.Pad(pad);
                 }
 
-                builder.Append(s);
+                builder.Append(argString);
 
                 if (leftJustify && pad > 0)
                 {
-                    builder.Append(' ', pad);
+                    builder.Pad(pad);
                 }
             }
         }
