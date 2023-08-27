@@ -28,13 +28,6 @@ namespace FrugalCafe
             int len = format.Length;
             char ch = '\x0';
 
-            ICustomFormatter cf = null;
-
-            if (provider != null)
-            {
-                cf = (ICustomFormatter)provider.GetFormat(typeof(ICustomFormatter));
-            }
-
             while (true)
             {
                 int p = pos;
@@ -221,36 +214,22 @@ namespace FrugalCafe
 
                 pos++;
 
-                string sFmt = null;
                 string argString = null;
 
-                if (cf != null)
+                if (arg is IFormattable formattableArg)
                 {
+                    string sFmt = null;
+
                     if (fmtBuilder != null)
                     {
                         sFmt = fmtBuilder.ToString();
                     }
 
-                    argString = cf.Format(sFmt, arg, provider);
+                    argString = formattableArg.ToString(sFmt, provider);
                 }
-
-                if (argString == null)
+                else if (arg != null)
                 {
-                    IFormattable formattableArg = arg as IFormattable;
-
-                    if (formattableArg != null)
-                    {
-                        if (sFmt == null && fmtBuilder != null)
-                        {
-                            sFmt = fmtBuilder.ToString();
-                        }
-
-                        argString = formattableArg.ToString(sFmt, provider);
-                    }
-                    else if (arg != null)
-                    {
-                        argString = arg.ToString();
-                    }
+                    argString = arg.ToString();
                 }
 
                 if (fmtBuilder != null)
