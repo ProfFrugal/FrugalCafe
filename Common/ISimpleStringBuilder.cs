@@ -14,7 +14,7 @@ namespace FrugalCafe
         /// <summary>
         /// Append a character from formatting string.
         /// </summary>
-        void Append(char value);
+        void Append(string format, int pos);
 
         /// <summary>
         /// Add white space padding

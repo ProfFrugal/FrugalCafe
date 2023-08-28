@@ -4,34 +4,30 @@ namespace FrugalCafe
 {
     public struct Substring : IEquatable<Substring>
     {
-        private readonly string _text;
-        private readonly int _start;
-        private readonly int _length;
-
         public Substring(string value, int start, int length)
         {
-            _text = value;
-            _start = start;
-            _length = length;
+            Text = value;
+            Start = start;
+            Length = length;
         }
 
         public Substring(string value)
         {
-            _text = value;
-            _start = 0;
-            _length = value.Length;
+            Text = value;
+            Start = 0;
+            Length = value.Length;
         }
 
         public override string ToString()
         {
-            return _text.Substring(_start, _length);
+            return Text.Substring(Start, Length);
         }
 
         public bool Equals(Substring other)
         {
-            if (_length == other._length)
+            if (Length == other.Length)
             {
-                return string.CompareOrdinal(_text, _start, other._text, other._start, _length) == 0;
+                return string.CompareOrdinal(Text, Start, other.Text, other.Start, Length) == 0;
             }
 
             return false;
@@ -51,16 +47,25 @@ namespace FrugalCafe
         {
             int hash = 0;
 
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < Length; i++)
             {
-                hash = hash * 131 + _text[_start + i];
+                hash = hash * 131 + Text[Start + i];
             }
 
             return hash;
         }
 
-        public int Length => _length;
+        public void Expand(int add)
+        {
+            this.Length += add;
+        }
 
-        public char this[int index] => _text[_start + index];
+        public int Length { get; private set; }
+
+        public int Start { get; }
+
+        public string Text { get; }
+
+        public char this[int index] => Text[Start + index];
     }
 }

@@ -108,6 +108,7 @@
     <Compile Include="Common\StringComparer32.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\StringFormatter.cs" />
+    <Compile Include="Common\StringFormatterExtensions.cs" />
     <Compile Include="Common\ThrowHelper.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
     <Compile Include="Posts\CSharpLanguage.cs" />

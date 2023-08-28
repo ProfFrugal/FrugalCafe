@@ -18,9 +18,9 @@ namespace FrugalCafe
             _writer.Write(value);
         }
 
-        public void Append(char value)
+        public void Append(string format, int index)
         {
-            _writer.Write(value);
+            _writer.Write(format[index]);
         }
 
         public void Pad(int repeat)

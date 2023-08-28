@@ -1,261 +1,154 @@
-﻿using System;
+﻿// Copyright (c) 2023 Feng Yuan for https://frugalcafe.beehiiv.com/
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this
+// software and associated documentation files (the "Software"), to deal in the Software
+// without restriction, including without limitation the rights to use, copy, modify, merge,
+// publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+// to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or
+// substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+// PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+// FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace FrugalCafe
 {
-    public static class StringFormatter
+    public class StringFormatter : ISimpleStringBuilder
     {
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void FormatError()
+        private static readonly string Pad256 = new string(' ', 256);
+
+        private Substring[] _strings = new Substring[8];
+        private int _stringCount;
+
+        public void Clear(bool clearData)
         {
-            throw new FormatException("Format string is not in correct format.");
+            for (int i = 0; i < _stringCount; i++)
+            {
+                _strings[i] = default(Substring);
+            }
+
+            _stringCount = 0;
         }
 
-        public static void AppendFormat<T>(
-            this T builder, 
-            string format, 
-            ParamsArray<object> args, 
-            IFormatProvider provider = null)
-            where T : ISimpleStringBuilder
+        public void Append(string value)
         {
-            if (format == null)
+            if ((value != null) && (value.Length != 0))
             {
-                throw new ArgumentNullException(nameof(format));
+                this.Add(new Substring(value));
+            }
+        }
+
+        public void Append(string format, int pos)
+        {
+            if (_stringCount != 0)
+            {
+                ref Substring last = ref _strings[_stringCount - 1];
+
+                if ((last.Text == format) && ((last.Start + last.Length) == pos))
+                {
+                    last.Expand(1);
+
+                    return;
+                }
             }
 
-            int pos = 0;
-            int len = format.Length;
-            char ch = '\x0';
+            this.Add(new Substring(format, pos, 1));
+        }
 
-            while (true)
+        public void Pad(int repeat)
+        {
+            while (repeat > 0)
             {
-                int p = pos;
+                int len = Math.Min(repeat, StringFormatter.Pad256.Length);
 
-                while (pos < len)
+                Add(new Substring(StringFormatter.Pad256, 0, len));
+
+                repeat -= len;
+            }
+        }
+
+        public unsafe override string ToString()
+        {
+            if (_stringCount == 0)
+            {
+                return string.Empty;
+            }
+
+            if (_stringCount == 1)
+            {
+                return _strings[0].ToString();
+            }
+
+            int length = 0;
+
+            for (int i = 0; i < _stringCount; i++)
+            {
+                length += _strings[i].Length;
+            }
+
+            string result = new string(char.MinValue, length);
+
+            fixed (char* dst = result) 
+            {
+                char* d = dst;
+
+                for (int i = 0; i < _stringCount; i++)
                 {
-                    ch = format[pos];
-                    pos++;
+                    Substring sub = _strings[i];
 
-                    if (ch == '}')
+                    int len = sub.Length;
+
+                    fixed (char* src = sub.Text)
                     {
-                        if (pos < len && format[pos] == '}') // Treat as escape character for }}
+                        char* s = src + sub.Start;
+
+                        switch (len)
                         {
-                            pos++;
-                        }
-                        else
-                        {
-                            FormatError();
-                        }
-                    }
-                    else if (ch == '{')
-                    {
-                        if (pos < len && format[pos] == '{') // Treat as escape character for {{
-                        {
-                            pos++;
-                        }
-                        else
-                        {
-                            pos--;
-                            break;
-                        }
-                    }
-
-                    builder.Append(ch);
-                }
-
-                if (pos == len) break;
-
-                pos++;
-
-                if (pos == len || (ch = format[pos]) < '0' || ch > '9')
-                {
-                    FormatError();
-                }
-
-                int index = 0;
-
-                do
-                {
-                    index = index * 10 + ch - '0';
-                    pos++;
-
-                    if (pos == len)
-                    {
-                        FormatError();
-                    }
-
-                    ch = format[pos];
-                }
-                while (ch >= '0' && ch <= '9' && index < 1000000);
-
-                if (index >= args.Length)
-                {
-                    FormatError();
-                }
-
-                while (pos < len && (ch = format[pos]) == ' ') 
-                { 
-                    pos++; 
-                }
-                
-                bool leftJustify = false;
-                int width = 0;
-
-                if (ch == ',')
-                {
-                    pos++;
-
-                    while (pos < len && format[pos] == ' ')
-                    { 
-                        pos++; 
-                    }
-
-                    if (pos == len)
-                    {
-                        FormatError();
-                    }
-
-                    ch = format[pos];
-
-                    if (ch == '-')
-                    {
-                        leftJustify = true;
-                        pos++;
-
-                        if (pos == len)
-                        {
-                            FormatError();
-                        }
-
-                        ch = format[pos];
-                    }
-
-                    if (ch < '0' || ch > '9')
-                    {
-                        FormatError();
-                    }
-
-                    do
-                    {
-                        width = width * 10 + ch - '0';
-                        pos++;
-
-                        if (pos == len)
-                        {
-                            FormatError();
-                        }
-
-                        ch = format[pos];
-                    }
-                    while (ch >= '0' && ch <= '9' && width < 1000000);
-                }
-
-                while (pos < len && (ch = format[pos]) == ' ')
-                {
-                    pos++;
-                }
-
-                object arg = args[index];
-                StringBuilder fmtBuilder = null;
-
-                if (ch == ':')
-                {
-                    pos++;
-                    p = pos;
-
-                    while (true)
-                    {
-                        if (pos == len)
-                        {
-                            FormatError();
-                        }
-
-                        ch = format[pos];
-                        pos++;
-
-                        if (ch == '{')
-                        {
-                            if (pos < len && format[pos] == '{')  // Treat as escape character for {{
-                            {
-                                pos++;
-                            }
-                            else
-                            {
-                                FormatError();
-                            }
-                        }
-                        else if (ch == '}')
-                        {
-                            if (pos < len && format[pos] == '}')  // Treat as escape character for }}
-                            {
-                                pos++;
-                            }
-                            else
-                            {
-                                pos--;
+                            case 1:
+                                d[0] = s[0];
                                 break;
-                            }
+
+                            case 2:
+                                d[0] = s[0];
+                                d[1] = s[1];
+                                break;
+
+                            case 3:
+                                d[0] = s[0];
+                                d[1] = s[1];
+                                d[2] = s[2];
+                                break;
+
+                            default:
+                                Buffer.MemoryCopy(s, d, len * 2, len * 2);
+                                break;
                         }
-
-                        if (fmtBuilder == null)
-                        {
-                            fmtBuilder = StringBuilderExtensions.AcquireBuilder();
-                        }
-
-                        fmtBuilder.Append(ch);
                     }
-                }
-
-                if (ch != '}')
-                {
-                    FormatError();
-                }
-
-                pos++;
-
-                string argString = null;
-
-                if (arg is IFormattable formattableArg)
-                {
-                    string sFmt = null;
-
-                    if (fmtBuilder != null)
-                    {
-                        sFmt = fmtBuilder.ToString();
-                    }
-
-                    argString = formattableArg.ToString(sFmt, provider);
-                }
-                else if (arg != null)
-                {
-                    argString = arg.ToString();
-                }
-
-                if (fmtBuilder != null)
-                {
-                    fmtBuilder.Release();
-                }
-
-                if (argString == null)
-                {
-                    argString = string.Empty;
-                }
-
-                int pad = width - argString.Length;
-
-                if (!leftJustify && pad > 0)
-                {
-                    builder.Pad(pad);
-                }
-
-                builder.Append(argString);
-
-                if (leftJustify && pad > 0)
-                {
-                    builder.Pad(pad);
+                    
+                    d += len;
                 }
             }
+
+            return result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Add(Substring str)
+        {
+            if (_stringCount == _strings.Length)
+            {
+                Array.Resize(ref _strings, _stringCount * 2);
+            }
+
+            _strings[_stringCount++] = str;
         }
     }
 }
