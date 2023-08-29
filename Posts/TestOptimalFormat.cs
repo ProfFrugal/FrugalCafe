@@ -17,9 +17,9 @@ namespace FrugalCafe.Posts
 
             string paragraph1 = formatString.OptimalFormat(pangram);
 
-            Debug.Assert(object.ReferenceEquals(pangram.OptimalFormat("x"), pangram));
-
             Debug.Assert(object.ReferenceEquals("{0}".OptimalFormat(pangram), pangram));
+
+            Debug.Assert(object.ReferenceEquals(pangram.OptimalFormat("x"), pangram));
 
             Debug.Assert(paragraph0.Equals(paragraph1));
 
