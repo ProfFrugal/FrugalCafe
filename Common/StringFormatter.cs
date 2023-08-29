@@ -21,6 +21,10 @@ using System.Runtime.CompilerServices;
 
 namespace FrugalCafe
 {
+    /// <summary>
+    /// Replacement for .Net Framework string.Format call with 0 or 1 string allocation
+    /// , optimal for large string generation.
+    /// </summary>
     public class StringFormatter : ISimpleStringBuilder
     {
         private static readonly string Pad256 = new string(' ', 256);

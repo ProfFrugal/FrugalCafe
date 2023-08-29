@@ -6,6 +6,46 @@ namespace FrugalCafe
 {
     public static class StringFormatterExtensions
     {
+        [ThreadStatic]
+        private static StringFormatter reusedFormatter;
+
+        public static string OptimalFormat(this string format, object arg0)
+        {
+            return format.OptimalFormat(new ParamsArray<object>(arg0));
+        }
+
+        public static string OptimalFormat(this string format, object arg0, object arg1)
+        {
+            return format.OptimalFormat(new ParamsArray<object>(arg0, arg1));
+        }
+
+        public static string OptimalFormat(this string format, object arg0, object arg1, object arg2)
+        {
+            return format.OptimalFormat(new ParamsArray<object>(arg0, arg1, arg2));
+        }
+
+        public static string OptimalFormat(this string format, params object[] args)
+        {
+            return format.OptimalFormat(new ParamsArray<object>(args));
+        }
+
+        public static string OptimalFormat(this string format, ParamsArray<object> args)
+        {
+            StringFormatter formatter = reusedFormatter ?? new StringFormatter();
+
+            reusedFormatter = null;
+
+            formatter.AppendFormat(format, args);
+
+            string result = formatter.ToString();
+
+            formatter.Clear(true);
+
+            reusedFormatter = formatter;
+
+            return result;
+        }
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void FormatError()
         {

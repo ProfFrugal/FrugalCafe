@@ -9,6 +9,9 @@ namespace FrugalCafe
     {
         static void Main(string[] args)
         {
+            TestOptimalFormat.Test();
+            return;
+
             TestISimpleStringBuilder.Test();
 
             (new TestICSharpDecompiler()).Test(typeof(string));

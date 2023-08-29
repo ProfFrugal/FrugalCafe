@@ -134,6 +134,7 @@
     <Compile Include="Posts\TestPCCategory.cs" />
     <Compile Include="Posts\TestSegmentedList.cs" />
     <Compile Include="Posts\TestStringBuilderCache.cs" />
+    <Compile Include="Posts\TestOptimalFormat.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Posts\TestSubstring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
