@@ -56,7 +56,7 @@ namespace FrugalCafe
             {
                 ref Substring last = ref _strings[_stringCount - 1];
 
-                if ((last.Text == format) && ((last.Start + last.Length) == pos))
+                if (object.ReferenceEquals(last.Text, format) && ((last.Start + last.Length) == pos))
                 {
                     last.Expand(1);
 
