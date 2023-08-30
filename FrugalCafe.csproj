@@ -104,6 +104,7 @@
     <Compile Include="Common\ParamsArray.cs" />
     <Compile Include="Common\PCCategory.cs" />
     <Compile Include="Common\SegmentedList.cs" />
+    <Compile Include="Common\SortedList.cs" />
     <Compile Include="Common\StringBuilderExtensions.cs" />
     <Compile Include="Common\StringComparer32.cs" />
     <Compile Include="Common\StringExtensions.cs" />
