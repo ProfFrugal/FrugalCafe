@@ -8,8 +8,13 @@ namespace FrugalCafe
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
+            TestInplaceOrderBy.Test();
+
+            return;
+
             TestOptimalFormat.Test();
             return;
 

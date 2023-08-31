@@ -38,16 +38,6 @@ namespace FrugalCafe
 
         public int Count => _count;
 
-        public void Clear(bool clearData = true)
-        {
-            if ((_count != 0) && clearData)
-            {
-                Array.Clear(_items, 0, _count);
-            }
-
-            _count = 0;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureSorted()
         {
