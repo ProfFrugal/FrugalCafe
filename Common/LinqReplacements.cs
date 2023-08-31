@@ -12,14 +12,14 @@ namespace FrugalCafe.Common
 
         public static void InplaceOrderByDescending<T>(this List<T> list, IComparer<T> comparer = null)
         {
-            list.Sort(new DescendingFuncComparer<T>(comparer));
+            list.Sort(new DescendingComparer<T>(comparer));
         }
 
-        public class DescendingFuncComparer<T> : IComparer<T>
+        public class DescendingComparer<T> : IComparer<T>
         {
             private readonly IComparer<T> _comparer;
 
-            public DescendingFuncComparer(IComparer<T> comparer = null)
+            public DescendingComparer(IComparer<T> comparer = null)
             {
                 _comparer = comparer ?? Comparer<T>.Default;
             }

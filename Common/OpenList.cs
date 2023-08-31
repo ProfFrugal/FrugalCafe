@@ -1,5 +1,6 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using FrugalCafe.Common;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace FrugalCafe
@@ -9,6 +10,17 @@ namespace FrugalCafe
         protected T[] _items;
         protected int _count;
         protected int _freeSpace;
+
+        public OpenList()
+        {
+        }
+
+        public OpenList(ICollection<T> data)
+        {
+            _count = data.Count;
+            _items = new T[_count];
+            data.CopyTo(_items, 0 );
+        }
 
         public void Add(T item)
         {
@@ -64,6 +76,48 @@ namespace FrugalCafe
             }
 
             _count = 0;
+        }
+
+        public void Sort(IComparer<T> comparer = null)
+        {
+            if (_count >= 1)
+            {
+                Array.Sort(_items, 0, _count, comparer);
+            }
+        }
+
+        public void Sort<K>(Func<T, K> selector, IComparer<K> comparer = null)
+        {
+            if (_count >= 1)
+            {
+                K[] keys = SingletonArrayPool<K>.Rent(_count);
+
+                for (int i = 0; i < _count; i++)
+                {
+                    keys[i] = selector(_items[i]);
+                }
+
+                Array.Sort(keys, _items, 0, _count, comparer);
+
+                SingletonArrayPool<K>.Release(keys);
+            }
+        }
+
+        public void SortDescending<K>(Func<T, K> selector, IComparer<K> comparer = null)
+        {
+            if (_count >= 1)
+            {
+                K[] keys = SingletonArrayPool<K>.Rent(_count);
+
+                for (int i = 0; i < _count; i++)
+                {
+                    keys[i] = selector(_items[i]);
+                }
+
+                Array.Sort(keys, _items, 0, _count, new LinqReplacements.DescendingComparer<K>(comparer));
+
+                SingletonArrayPool<K>.Release(keys);
+            }
         }
 
         public void Reverse()

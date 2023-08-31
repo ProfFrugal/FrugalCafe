@@ -20,7 +20,7 @@ namespace FrugalCafe
 
             int result = 0;
 
-            int count = 1000 * 100;
+            int count = 1000 * 50;
 
             PerfTest.MeasurePerf(
                 () =>
@@ -49,6 +49,15 @@ namespace FrugalCafe
                 },
                 "InplaceOrderByDescending", count);
 
+            PerfTest.MeasurePerf(
+                () =>
+                {
+                    OpenList<string> copy = new OpenList<string>(pangram);
+
+                    copy.SortDescending((k) => k, StringComparer.Ordinal);
+                    result = copy.Count;
+                },
+                "OpenList.SortDescending", count);
         }
     }
 }
