@@ -109,6 +109,7 @@
     <Compile Include="Common\SortedList.cs" />
     <Compile Include="Common\StringBuilderExtensions.cs" />
     <Compile Include="Common\StringComparer32.cs" />
+    <Compile Include="Common\DictionaryArray.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\StringFormatter.cs" />
     <Compile Include="Common\StringFormatterExtensions.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Posts\TestSegmentedList.cs" />
     <Compile Include="Posts\TestStringBuilderCache.cs" />
     <Compile Include="Posts\TestOptimalFormat.cs" />
+    <Compile Include="Posts\TestDictionaryArray.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Posts\TestSubstring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

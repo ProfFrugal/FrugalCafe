@@ -11,9 +11,10 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
-            TestInplaceOrderBy.Test();
-
+            TestDictionaryArray.Test(args[0]);
             return;
+
+            TestInplaceOrderBy.Test();
 
             TestOptimalFormat.Test();
             return;
