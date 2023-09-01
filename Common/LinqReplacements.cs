@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FrugalCafe.Common
+namespace FrugalCafe
 {
     public static class LinqReplacements
     {

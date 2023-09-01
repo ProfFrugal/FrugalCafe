@@ -1,5 +1,4 @@
-﻿using FrugalCafe.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -116,7 +115,7 @@ namespace FrugalCafe
 
                 Array.Sort(keys, _items, 0, _count, new LinqReplacements.DescendingComparer<K>(comparer));
 
-                SingletonArrayPool<K>.Release(keys);
+                SingletonArrayPool<K>.Release(keys, _count);
             }
         }
 

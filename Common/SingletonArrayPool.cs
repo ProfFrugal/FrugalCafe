@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 
-namespace FrugalCafe.Common
+namespace FrugalCafe
 {
-    internal static class SingletonArrayPool<T>
+    public static class SingletonArrayPool<T>
     {
         private static T[] reusedBuffer;
 
@@ -19,8 +19,13 @@ namespace FrugalCafe.Common
             return buffer;
         }
 
-        public static void Release(T[] buffer)
+        public static void Release(T[] buffer, int count = -1)
         {
+            for (int i = 0; i < count; i++)
+            {
+                buffer[i] = default(T);
+            }
+
             SingletonArrayPool<T>.reusedBuffer = buffer;
         }
     }
