@@ -11,6 +11,9 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestSimpleHashSet.Test();
+            return;
+
             TestIsPrime.Test();
             return;
 

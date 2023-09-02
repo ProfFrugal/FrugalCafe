@@ -23,12 +23,17 @@ namespace FrugalCafe
         static HashHelpers()
         {
             Primes24 = AddNoLohPrimes(24);
-            Primes16 = AddNoLohPrimes(16);
+            Primes16 = AddNoLohPrimes(16, 11);
         }
 
-        public static int[] AddNoLohPrimes(int elementSize)
+        public static int[] AddNoLohPrimes(int elementSize, params int[] remove)
         {
             HashSet<int> combined = new HashSet<int>(HashHelpers.OldPrimes);
+
+            foreach(var p in remove)
+            {
+                combined.Remove(p);
+            }
 
             foreach (var p in HashHelpers.NoLohSequence(elementSize))
             {
@@ -73,6 +78,39 @@ namespace FrugalCafe
         {
             uint num = (uint)(h1 << 5) | ((uint)h1 >> 27);
             return ((int)num + h1) ^ h2;
+        }
+
+        public static int GetPrime(int min)
+        {
+            return GetPrime(min, OldPrimes);
+        }
+
+        public static int GetPrime(int min, int[] primes)
+        {
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min));
+            }
+
+            for (int i = 0; i < primes.Length; i++)
+            {
+                int num = primes[i];
+                
+                if (num >= min)
+                {
+                    return num;
+                }
+            }
+
+            for (int j = min | 1; j < int.MaxValue; j += 2)
+            {
+                if (IsPrime(j))
+                {
+                    return j;
+                }
+            }
+            
+            return min;
         }
 
         public static bool IsPrime(int candidate)
