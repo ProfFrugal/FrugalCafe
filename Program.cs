@@ -11,6 +11,9 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestIsPrime.Test();
+            return;
+
             TestDictionaryArray.Test(args[0]);
             return;
 

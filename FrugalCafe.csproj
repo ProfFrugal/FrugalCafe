@@ -132,6 +132,7 @@
     <Compile Include="Posts\TestICSharpDecompiler.cs" />
     <Compile Include="Posts\TestInplaceOrderBy.cs" />
     <Compile Include="Posts\TestISimpleStringBuilder.cs" />
+    <Compile Include="Posts\TestIsPrime.cs" />
     <Compile Include="Posts\TestJsonContractResolver.cs" />
     <Compile Include="Posts\LinqIsNotQuick.cs" />
     <Compile Include="Common\PerfTest.cs" />
