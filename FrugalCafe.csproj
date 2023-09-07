@@ -97,37 +97,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\LinqReplacements.cs" />
-    <Compile Include="Common\ComboKey.cs" />
-    <Compile Include="Common\EnumHelper.cs" />
-    <Compile Include="Common\HashHelpers.cs" />
-    <Compile Include="Common\ISimpleStringBuilder.cs" />
-    <Compile Include="Common\ParamsArray.cs" />
-    <Compile Include="Common\PCCategory.cs" />
-    <Compile Include="Common\SegmentedList.cs" />
-    <Compile Include="Common\SimpleHashSet.cs" />
-    <Compile Include="Common\SingletonArrayPool.cs" />
-    <Compile Include="Common\SmallDictionary.cs" />
-    <Compile Include="Common\SortedList.cs" />
-    <Compile Include="Common\StringBuilderExtensions.cs" />
-    <Compile Include="Common\StringComparer32.cs" />
-    <Compile Include="Common\DictionaryArray.cs" />
-    <Compile Include="Common\StringExtensions.cs" />
-    <Compile Include="Common\StringFormatter.cs" />
-    <Compile Include="Common\StringFormatterExtensions.cs" />
-    <Compile Include="Common\ThrowHelper.cs" />
     <Compile Include="Posts\AppInfoCache.cs" />
     <Compile Include="Posts\CSharpLanguage.cs" />
     <Compile Include="Posts\DictionaryCorruption.cs" />
     <Compile Include="Posts\Json.cs" />
-    <Compile Include="Common\OpenList.cs" />
     <Compile Include="Posts\NSquare.cs" />
     <Compile Include="Posts\RegularExpression.cs" />
     <Compile Include="Posts\ReplaceChunk.cs" />
     <Compile Include="Posts\ReplaceGroupBy.cs" />
     <Compile Include="Posts\StringCompare.cs" />
-    <Compile Include="Common\StringSplitter.cs" />
-    <Compile Include="Common\Substring.cs" />
     <Compile Include="Posts\StringComparerTest.cs" />
     <Compile Include="Posts\TestComboKey.cs" />
     <Compile Include="Posts\TestEnumHelper.cs" />
@@ -137,7 +115,6 @@
     <Compile Include="Posts\TestIsPrime.cs" />
     <Compile Include="Posts\TestJsonContractResolver.cs" />
     <Compile Include="Posts\LinqIsNotQuick.cs" />
-    <Compile Include="Common\PerfTest.cs" />
     <Compile Include="Posts\TestMemoryCache.cs" />
     <Compile Include="Posts\TestOrderBy.cs" />
     <Compile Include="Posts\TestPCCategory.cs" />

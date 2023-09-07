@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrugalCafe", "FrugalCafe.csproj", "{C62091B9-B536-4A4B-BE38-57B775FE3CD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrugalLib", "Common\FrugalLib.csproj", "{709F229C-E8FA-4304-878B-B7485644AE10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C62091B9-B536-4A4B-BE38-57B775FE3CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C62091B9-B536-4A4B-BE38-57B775FE3CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C62091B9-B536-4A4B-BE38-57B775FE3CD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{709F229C-E8FA-4304-878B-B7485644AE10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{709F229C-E8FA-4304-878B-B7485644AE10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{709F229C-E8FA-4304-878B-B7485644AE10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{709F229C-E8FA-4304-878B-B7485644AE10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
