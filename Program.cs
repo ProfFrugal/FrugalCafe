@@ -1,8 +1,10 @@
 ﻿using FrugalCafe.Posts;
+using ICSharpCode.Decompiler.CSharp.Syntax.PatternMatching;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FrugalCafe
 {

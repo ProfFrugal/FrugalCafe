@@ -107,6 +107,7 @@
     <Compile Include="Common\SegmentedList.cs" />
     <Compile Include="Common\SimpleHashSet.cs" />
     <Compile Include="Common\SingletonArrayPool.cs" />
+    <Compile Include="Common\SmallDictionary.cs" />
     <Compile Include="Common\SortedList.cs" />
     <Compile Include="Common\StringBuilderExtensions.cs" />
     <Compile Include="Common\StringComparer32.cs" />

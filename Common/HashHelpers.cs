@@ -1,8 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace FrugalCafe
 {
+    public enum InsertionBehavior
+    {
+        ReturnFalse,
+        OverwriteExisting,
+        ThrowOnExisting
+    }
+
     public static class HashHelpers
     {
         public static readonly int[] Primes24;
@@ -129,6 +137,18 @@ namespace FrugalCafe
             }
 
             return (candidate == 2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong GetFastModMultiplier(uint divisor)
+        {
+            return ulong.MaxValue / (ulong)divisor + 1;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint FastMod(uint value, uint divisor, ulong multiplier)
+        {
+            return (uint)(((multiplier * value >> 32) + 1) * divisor >> 32);
         }
     }
 }

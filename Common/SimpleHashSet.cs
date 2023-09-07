@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace FrugalCafe.Common
+namespace FrugalCafe
 {
     public class SimpleHashSet<T>
     {
