@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Posts\AppInfoCache.cs" />
+    <Compile Include="Posts\BillionObjects.cs" />
     <Compile Include="Posts\CSharpLanguage.cs" />
     <Compile Include="Posts\DictionaryCorruption.cs" />
     <Compile Include="Posts\Json.cs" />
@@ -133,6 +134,12 @@
     <None Include="App.config" />
     <Compile Include="Posts\MermoryCacheLeak.cs" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Common\FrugalLib.csproj">
+      <Project>{709f229c-e8fa-4304-878b-b7485644ae10}</Project>
+      <Name>FrugalLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,6 +13,10 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            BillionObjects.Test();
+
+            return;
+
             TestSimpleHashSet.Test();
             return;
 
