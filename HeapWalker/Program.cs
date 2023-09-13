@@ -40,8 +40,20 @@ namespace HeapWalker
 
         class Stat
         {
-            internal ulong count;
-            internal ulong size;
+            internal ulong Count;
+            internal ulong TotalSize;
+            internal ulong Largest;
+
+            public void Add(ulong size)
+            {
+                Count++;
+                TotalSize += size;
+
+                if (size > Largest)
+                {
+                    Largest = size;
+                }
+            }
         }
 
         class NetDbgObj
@@ -125,14 +137,13 @@ namespace HeapWalker
                             stats.Add(type, s);
                         }
 
-                        s.count++;
-                        s.size += size;
+                        s.Add(size);
                     }
                 }
 
                 var data = stats.ToArray();
 
-                Array.Sort(data, (x, y) => y.Value.size.CompareTo(x.Value.size));
+                Array.Sort(data, (x, y) => y.Value.TotalSize.CompareTo(x.Value.TotalSize));
 
                 int len = Math.Min(data.Length, 40);
 
@@ -140,7 +151,7 @@ namespace HeapWalker
                 {
                     var s = data[i];
 
-                    Console.WriteLine("{0,14:N0} {1,12:N0}, {2}", s.Value.size, s.Value.count, s.Key.Name);
+                    Console.WriteLine("{0,14:N0} {1,12:N0}, {2,14:N0}, {3}", s.Value.TotalSize, s.Value.Count, s.Value.Largest, s.Key.Name);
                 }
 
                 Post();
