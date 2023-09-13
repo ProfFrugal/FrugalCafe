@@ -62,6 +62,22 @@ namespace HeapWalker
                     Largest = size;
                 }
             }
+
+            public void Add(Stat s)
+            {
+                Count += s.Count;
+                TotalSize += s.TotalSize;
+
+                if (s.Largest > Largest)
+                {
+                    Largest = s.Largest;
+                }
+            }
+
+            public void Write(string typeName)
+            {
+                Console.WriteLine("{0,14:N0} {1,12:N0}, {2,14:N0}, {3}", TotalSize, Count, Largest, typeName);
+            }
         }
 
         class NetDbgObj
@@ -158,6 +174,13 @@ namespace HeapWalker
                     }
                 }
 
+                Stat total = new Stat();
+
+                foreach (var v in stats.Values)
+                {
+                    total.Add(v);
+                }
+
                 var data = stats.ToArray();
 
                 Array.Sort(data, (x, y) => y.Value.TotalSize.CompareTo(x.Value.TotalSize));
@@ -166,11 +189,13 @@ namespace HeapWalker
 
                 Console.WriteLine("{0,14} {1,12}, {2,14}, {3}", "Size", "Count", "Largest", "Type");
 
+                total.Write("Total");
+
                 for (int i = 0; i < len; i++)
                 {
                     var s = data[i];
 
-                    Console.WriteLine("{0,14:N0} {1,12:N0}, {2,14:N0}, {3}", s.Value.TotalSize, s.Value.Count, s.Value.Largest, s.Key.Name);
+                    s.Value.Write(s.Key.Name);
                 }
 
                 Post();
