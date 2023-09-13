@@ -34,8 +34,8 @@ namespace HeapWalker
 
             var wrapper = new NetDbgObj(heap);
 
-        //  wrapper.Print40LargestObjectsFixed();
-            wrapper.Print40LargestObjects();
+            wrapper.Print40LargestObjectsFixed();
+         // wrapper.Print40LargestObjects();
         }
 
         class Stat
@@ -53,9 +53,29 @@ namespace HeapWalker
                 _heap = heap;
             }
 
+            long _alloc;
+            DateTime _now;
+
+            public void Pre()
+            {
+                _alloc = GC.GetAllocatedBytesForCurrentThread();
+                _now = DateTime.UtcNow;
+
+            }
+
+            public void Post()
+            {
+                _alloc = GC.GetAllocatedBytesForCurrentThread() - _alloc;
+
+                var span = DateTime.UtcNow - _now;
+
+                Console.WriteLine("Total allocation: {0:N0} bytes {1:N2} s", _alloc, span.TotalSeconds);
+
+            }
+
             public void Print40LargestObjects()
             {
-                long alloc = GC.GetAllocatedBytesForCurrentThread();
+                Pre();
 
                 try
                 {
@@ -82,14 +102,12 @@ namespace HeapWalker
                     Console.WriteLine(e);
                 }
 
-                alloc = GC.GetAllocatedBytesForCurrentThread() - alloc;
-
-                Console.WriteLine("Total allocation: {0:N0}", alloc);
+                Post();
             }
 
             public void Print40LargestObjectsFixed()
             {
-                long alloc = GC.GetAllocatedBytesForCurrentThread();
+                Pre();
 
                 Dictionary<ClrType, Stat> stats = new Dictionary<ClrType, Stat>();
 
@@ -125,9 +143,7 @@ namespace HeapWalker
                     Console.WriteLine("{0,14:N0} {1,12:N0}, {2}", s.Value.size, s.Value.count, s.Key.Name);
                 }
 
-                alloc = GC.GetAllocatedBytesForCurrentThread() - alloc;
-
-                Console.WriteLine("Total allocation: {0:N0}", alloc);
+                Post();
             }
 
             public IEnumerable<ClrObject> EnumerateHeapObjects(string typeName = null)
