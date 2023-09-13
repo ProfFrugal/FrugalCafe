@@ -164,6 +164,8 @@ namespace HeapWalker
 
                 int len = Math.Min(data.Length, 40);
 
+                Console.WriteLine("{0,14} {1,12}, {2,14}, {3}", "Size", "Count", "Largest", "Type");
+
                 for (int i = 0; i < len; i++)
                 {
                     var s = data[i];
