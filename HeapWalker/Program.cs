@@ -30,12 +30,20 @@ namespace HeapWalker
 
             ClrHeap heap = runtime.GetHeap();
 
-            Console.WriteLine("{0}", heap.Segments.Count);
+            Console.WriteLine("{0} segments", heap.Segments.Count);
 
             var wrapper = new NetDbgObj(heap);
 
-            wrapper.Print40LargestObjectsFixed();
-         // wrapper.Print40LargestObjects();
+            if ((args.Length == 2) && (args[1] == "old"))
+            {
+                Console.WriteLine("Slow original Linq based implementation.");
+
+                wrapper.Print40LargestObjects();
+            }
+            else
+            {
+                wrapper.Print40LargestObjectsFixed();
+            }         
         }
 
         class Stat
@@ -123,8 +131,17 @@ namespace HeapWalker
 
                 Dictionary<ClrType, Stat> stats = new Dictionary<ClrType, Stat>();
 
+                int count = 0;
+
                 foreach (ulong addr in _heap.EnumerateObjects())
                 {
+                    count++;
+
+                    if (count % (1024 * 1024) == 0)
+                    {
+                        Console.WriteLine("{0:N0} objects scanned", count);
+                    }
+
                     ClrType type = _heap.GetObjectType(addr);
 
                     if (type != null)
@@ -159,10 +176,19 @@ namespace HeapWalker
 
             public IEnumerable<ClrObject> EnumerateHeapObjects(string typeName = null)
             {
+                int count = 0;
+
                 using (IEnumerator<ulong> enumerator = EnumerateHeap(typeName).GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
+                        count++;
+
+                        if (count % (1024 * 1024) == 0)
+                        {
+                            Console.WriteLine("{0:N0} objects scanned", count);
+                        }
+
                         yield return new ClrObject(addr: enumerator.Current, heap: _heap, type: null);
                     }
                 }
