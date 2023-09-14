@@ -1,10 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Diagnostics.Runtime;
 
 namespace HeapWalker
@@ -43,7 +40,7 @@ namespace HeapWalker
             else
             {
                 wrapper.Print40LargestObjectsFixed();
-            }         
+            }
         }
 
         class Stat
@@ -80,6 +77,24 @@ namespace HeapWalker
             }
         }
 
+        static DateTime _lastMillion;
+
+        public static void Progress(int count)
+        {
+            long memory = GC.GetTotalMemory(false);
+
+            DateTime now = DateTime.UtcNow;
+
+            Console.WriteLine(
+                "{0:N0} objects scanned, memory: {1:N2} mb, {2:N2} bytes per object, {3:N0} ms", 
+                count, 
+                memory / 1024.0 / 1024, 
+                memory * 1.0 / count,
+                (now - _lastMillion).TotalMilliseconds);
+
+            _lastMillion = now;
+        }
+
         class NetDbgObj
         {
             private readonly ClrHeap _heap;
@@ -96,7 +111,7 @@ namespace HeapWalker
             {
                 _alloc = GC.GetAllocatedBytesForCurrentThread();
                 _now = DateTime.UtcNow;
-
+                _lastMillion = DateTime.UtcNow;
             }
 
             public void Post()
@@ -155,7 +170,7 @@ namespace HeapWalker
 
                     if (count % (1024 * 1024) == 0)
                     {
-                        Console.WriteLine("{0:N0} objects scanned", count);
+                        Progress(count);
                     }
 
                     ClrType type = _heap.GetObjectType(addr);
@@ -213,7 +228,7 @@ namespace HeapWalker
 
                         if (count % (1024 * 1024) == 0)
                         {
-                            Console.WriteLine("{0:N0} objects scanned", count);
+                            Progress(count);
                         }
 
                         yield return new ClrObject(addr: enumerator.Current, heap: _heap, type: null);
