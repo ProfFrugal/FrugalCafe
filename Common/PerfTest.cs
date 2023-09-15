@@ -20,7 +20,7 @@ namespace FrugalCafe
             PerfTest.Stop(name, repeat, 1);
         }
 
-        public static void Start(Action warmup = null)
+        public static void Start(Action warmup = null, bool gc = true)
         {
             Console.WriteLine();
 
@@ -30,11 +30,14 @@ namespace FrugalCafe
                 warmup();
             }
 
-            Thread.Sleep(500);
-            GC.Collect(2);
-            GC.WaitForPendingFinalizers();
-            GC.Collect(2);
-            Thread.Sleep(500);
+            if (gc)
+            {
+                Thread.Sleep(500);
+                GC.Collect(2);
+                GC.WaitForPendingFinalizers();
+                GC.Collect(2);
+                Thread.Sleep(500);
+            }
 
             PerfTest.now = DateTime.UtcNow;
 

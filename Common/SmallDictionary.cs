@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FrugalCafe
 {
     public class SmallDictionary<K, V> where K : IEquatable<K>
     {
+        [StructLayout(LayoutKind.Auto)]
         private struct Slot
         {
             internal K key;
@@ -23,11 +25,25 @@ namespace FrugalCafe
         {
             if (capacity > 0)
             {
-                int size = HashHelpers.GetPrime(capacity, HashHelpers.Primes16);
+                int size = HashHelpers.GetPrimeAll(capacity);
                 
                 _buckets = new short[size];
                 _slots = new Slot[size];
                 _fastModMultiplier = HashHelpers.GetFastModMultiplier((uint)size);
+            }
+        }
+
+        public SmallDictionary(SmallDictionary<K, V> other)
+        {
+            int size = HashHelpers.GetPrimeAll(other._count);
+
+            _buckets = new short[size];
+            _slots = new Slot[size];
+            _fastModMultiplier = HashHelpers.GetFastModMultiplier((uint)size);
+
+            for (int i = 0; i < other._count; i++)
+            {
+                Add(other._slots[i].key, other._slots[i].value);
             }
         }
 
@@ -161,7 +177,7 @@ namespace FrugalCafe
                 return;
             }
 
-            int newSize = HashHelpers.GetPrime(_count * 2 + 1, HashHelpers.Primes16);
+            int newSize = HashHelpers.GetPrimeAll(_count * 2 + 1);
 
             Slot[] newSlots = new Slot[newSize];
             _fastModMultiplier = HashHelpers.GetFastModMultiplier((uint)newSize);
