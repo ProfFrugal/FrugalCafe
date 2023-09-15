@@ -1,10 +1,5 @@
 ﻿using FrugalCafe.Posts;
-using ICSharpCode.Decompiler.CSharp.Syntax.PatternMatching;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace FrugalCafe
 {
@@ -13,6 +8,9 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestSmallDictionary.Test();
+            return;
+
             BillionObjects.Test();
 
             return;

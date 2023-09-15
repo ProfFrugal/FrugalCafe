@@ -66,13 +66,18 @@ namespace FrugalCafe
         {
             uint hashCode = InternalGetHashCode(key);
 
+            if (_slots == null)
+            {
+                Resize();
+            }
+
             int bucket = GetBucket(hashCode);
 
             if (_count > 0)
             {
-                for (int i = bucket - 1; i >= 0; i = _slots[i].next)
+                for (int i = _buckets[bucket] - 1; i >= 0; i = _slots[i].next)
                 { 
-                    if (_slots[i].key.Equals(value))
+                    if (_slots[i].key.Equals(key))
                     {
                         if (whenFound == InsertionBehavior.ThrowOnExisting)
                         {
@@ -90,7 +95,7 @@ namespace FrugalCafe
                 }
             }
 
-            if ((_slots == null) || (_count == _slots.Length))
+            if (_count == _slots.Length)
             {
                 Resize();
                 bucket = GetBucket(hashCode);
@@ -108,9 +113,9 @@ namespace FrugalCafe
             return true;
         }
 
-        public bool ContainsKey(K value)
+        public bool ContainsKey(K key)
         {
-            return (_count > 0) && (FindSlot(value, InternalGetHashCode(value)) >= 0);
+            return (_count > 0) && (FindSlot(key, InternalGetHashCode(key)) >= 0);
         }
 
         public bool TryGetValue(K key, out V value)
@@ -133,11 +138,11 @@ namespace FrugalCafe
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int FindSlot(K value, uint hashCode)
+        private int FindSlot(K key, uint hashCode)
         {
-            for (int i = GetBucket(hashCode) - 1; i >= 0; i = _slots[i].next)
+            for (int i = _buckets[GetBucket(hashCode)] - 1; i >= 0; i = _slots[i].next)
             {
-                if (_slots[i].key.Equals(value))
+                if (_slots[i].key.Equals(key))
                 {
                     return i;
                 }
@@ -178,7 +183,7 @@ namespace FrugalCafe
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetBucket(uint hashCode)
         {
-            return _buckets[HashHelpers.FastMod(hashCode, (uint)_buckets.Length, _fastModMultiplier)];
+            return (int)HashHelpers.FastMod(hashCode, (uint)_buckets.Length, _fastModMultiplier);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
