@@ -35,6 +35,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>packages\FluentValidation.11.7.1\lib\netstandard2.0\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.Decompiler, Version=8.1.0.7455, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <HintPath>packages\ICSharpCode.Decompiler.8.1.0.7455\lib\netstandard2.0\ICSharpCode.Decompiler.dll</HintPath>
     </Reference>
@@ -110,6 +113,7 @@
     <Compile Include="Posts\StringComparerTest.cs" />
     <Compile Include="Posts\TestComboKey.cs" />
     <Compile Include="Posts\TestEnumHelper.cs" />
+    <Compile Include="Posts\TestFluenValidation.cs" />
     <Compile Include="Posts\TestICSharpDecompiler.cs" />
     <Compile Include="Posts\TestInplaceOrderBy.cs" />
     <Compile Include="Posts\TestISimpleStringBuilder.cs" />
