@@ -31,7 +31,11 @@ namespace HeapWalker
 
             var wrapper = new NetDbgObj(heap);
 
-            if ((args.Length == 2) && (args[1] == "old"))
+            if ((args.Length >= 3) && (args[1] == "gen0"))
+            {
+                wrapper.WalkGen0(args[2]);
+            }
+            else if ((args.Length == 2) && (args[1] == "old"))
             {
                 Console.WriteLine("Slow original Linq based implementation.");
 
@@ -154,6 +158,51 @@ namespace HeapWalker
                 }
 
                 Post();
+            }
+
+            public void WalkGen0(string marker)
+            {
+                Console.WriteLine("Seaching for {0} in Gen0", marker);
+
+                foreach (ClrSegment seg in _heap.Segments)
+                {
+                    if (!seg.IsEphemeral) continue;
+
+                    ulong gen0Start = seg.Gen0Start;
+                    ulong gen0End = gen0Start + seg.Gen0Length;
+
+                    bool found = false;
+
+                    foreach (ulong addr in seg.EnumerateObjects())
+                    {
+                        if (addr >= gen0Start && addr <= gen0End)
+                        {
+                            ClrType type = _heap.GetObjectType(addr);
+
+                            if (type != null)
+                            {
+                                string name = type.Name;
+
+                                if (name.EndsWith(marker))
+                                {
+                                    if (found)
+                                    {
+                                        break;
+                                    }
+
+                                    found = true;
+                                }
+
+                                if (found)
+                                {
+                                    ulong size = type.GetSize(addr);
+
+                                    Console.WriteLine("{0:x},{1},\"{2}\"", addr, size, name);
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             public void Print40LargestObjectsFixed()

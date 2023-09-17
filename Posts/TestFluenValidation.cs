@@ -23,11 +23,14 @@ namespace FrugalCafe.Posts
         {
             var validator = new CustomerValidator();
 
-            var customer = new Customer();
-
             PerfTest.MeasurePerf(
                 () => 
                 {
+                    var customer = new Customer();
+
+                    customer.Surname = "Last";
+                    customer.Forename = "First";
+
                     ValidationResult results = validator.Validate(customer);
 
                     // Inspect any validation failures.
