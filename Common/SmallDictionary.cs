@@ -65,6 +65,21 @@ namespace FrugalCafe
             }
         }
 
+        public void Clear(bool clearData = true)
+        {
+            if (_count != 0)
+            {
+                Array.Clear(_buckets, 0, _buckets.Length);
+
+                if (clearData)
+                {
+                    Array.Clear(_slots, 0, _count);
+                }
+
+                _count = 0;
+            }
+        }
+
         public int Count => _count;
 
         public int Capacity => (_buckets != null) ? _buckets.Length : 0;
