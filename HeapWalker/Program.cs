@@ -23,11 +23,29 @@ namespace HeapWalker
 
             ClrInfo clr = target.ClrVersions[0];
 
-            ClrRuntime runtime = target.CreateRuntime(clr.TryGetDacLocation());
+            string dac = clr.TryGetDacLocation();
+
+            if (string.IsNullOrEmpty(dac)) 
+            {
+                dac = "c:\\windows\\Microsoft.NET\\Framework64\\v4.0.30319\\mscordacwks.dll";
+            }
+
+            Console.WriteLine("{0} '{1}'", clr.ToString(), dac);
+
+            ClrRuntime runtime = target.CreateRuntime(dac);
 
             ClrHeap heap = runtime.GetHeap();
 
             Console.WriteLine("{0} segments", heap.Segments.Count);
+
+            foreach (var segment in heap.Segments) 
+            {
+                ulong start = segment.Start;
+
+                Console.WriteLine("{0:x}'{1:x8} {2:x} {3:N0} bytes", segment.Start >> 32, (uint)(segment.Start), segment.End, segment.Length);
+            }
+
+            Console.WriteLine();
 
             var wrapper = new NetDbgObj(heap);
 

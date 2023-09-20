@@ -8,6 +8,9 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestServiceStackText.Test();
+            return;
+
             Customer.Test();
             return;
 
