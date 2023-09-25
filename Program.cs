@@ -33,6 +33,20 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            string title = "FrugalCafe";
+
+            for (int i = 0; i < 10; i++)
+            {
+                title = title + i;
+
+                int hash1 = title.GetHashCode();
+                int hash2 = new Substring(title).GetHashCode();
+
+                System.Diagnostics.Debug.Assert(hash1 == hash2);
+
+                Console.WriteLine("{0:N0} {1:N1}", hash1, hash2);
+            }
+
             var writer = new StreamWriter(new MemoryStream());
 
             Console.WriteLine(Quote1("Microsoft"));
