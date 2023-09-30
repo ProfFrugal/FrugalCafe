@@ -58,6 +58,7 @@
     <Compile Include="PerfTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SegmentedList.cs" />
+    <Compile Include="SimpleDictionary.cs" />
     <Compile Include="SimpleHashSet.cs" />
     <Compile Include="SimpleStreamWriter.cs" />
     <Compile Include="SingletonArrayPool.cs" />
