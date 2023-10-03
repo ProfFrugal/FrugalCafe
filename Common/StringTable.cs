@@ -46,14 +46,17 @@ namespace FrugalCafe
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetOrAdd(string text)
+        public unsafe string GetOrAdd(string text)
         {
             if (text == null)
             {
                 return null;
             }
 
-            return GetOrAdd(text, 0, text.Length);
+            fixed (char* p = text)
+            {
+                return GetOrAdd(p, text.Length, text);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -71,7 +74,12 @@ namespace FrugalCafe
 
             fixed (char * p = text)
             {
-                return GetOrAdd(p + start, length);
+                if ((start != 0) || (text.Length != length))
+                {
+                    text = null;
+                }
+
+                return GetOrAdd(p + start, length, text);
             }
         }
 
@@ -106,8 +114,7 @@ namespace FrugalCafe
             }
         }
 
-
-        public unsafe string GetOrAdd(char* text, int length)
+        public unsafe string GetOrAdd(char* text, int length, string fullText = null)
         {
             if (text == null)
             {
@@ -139,7 +146,7 @@ namespace FrugalCafe
                 }
             }
 
-            cached = new string(text, 0, length);
+            cached = fullText ?? new string(text, 0, length);
 
             _cachedStrings[slot] = cached;
 
