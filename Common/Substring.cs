@@ -39,7 +39,7 @@ namespace FrugalCafe
 
         public override string ToString()
         {
-            return Text.Substring(Start, Length);
+            return StringTable.Shared.GetOrAdd(Text, Start, Length);
         }
 
         public bool Equals(Substring other)

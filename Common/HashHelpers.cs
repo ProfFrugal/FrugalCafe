@@ -239,10 +239,19 @@ namespace FrugalCafe
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Combine(this int h1, int h2)
         {
             uint num = (uint)(h1 << 5) | ((uint)h1 >> 27);
             return ((int)num + h1) ^ h2;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint Combine(this uint h1, uint h2)
+        {
+            uint num = (h1 << 5) | (h1 >> 27);
+            
+            return (num + h1) ^ h2;
         }
 
         public static int GetPrime(int min)

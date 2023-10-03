@@ -70,6 +70,7 @@
     <Compile Include="StringFormatter.cs" />
     <Compile Include="StringFormatterExtensions.cs" />
     <Compile Include="StringSplitter.cs" />
+    <Compile Include="StringTable.cs" />
     <Compile Include="Substring.cs" />
     <Compile Include="ThrowHelper.cs" />
   </ItemGroup>

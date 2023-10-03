@@ -33,6 +33,8 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestStringTable.Test();
+
             string title = "FrugalCafe";
 
             for (int i = 0; i < 10; i++)
