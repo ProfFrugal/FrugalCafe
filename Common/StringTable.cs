@@ -32,11 +32,11 @@ namespace FrugalCafe
 
         static StringTable()
         {
-            Latin1Strings = new string[256];
+            StringTable.Latin1Strings = new string[256];
 
             for (int i = 0; i < 256; i++)
             {
-                Latin1Strings[i] = ((char)i).ToString();
+                StringTable.Latin1Strings[i] = ((char)i).ToString();
             }
         }
 
@@ -46,7 +46,7 @@ namespace FrugalCafe
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe string GetOrAdd(string text)
+        public unsafe string Intern(string text)
         {
             if (text == null)
             {
@@ -55,12 +55,12 @@ namespace FrugalCafe
 
             fixed (char* p = text)
             {
-                return GetOrAdd(p, text.Length, text);
+                return Intern(p, text.Length, text);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe string GetOrAdd(string text, int start, int length)
+        public unsafe string Intern(string text, int start, int length)
         {
             if (text == null)
             {
@@ -79,24 +79,24 @@ namespace FrugalCafe
                     text = null;
                 }
 
-                return GetOrAdd(p + start, length, text);
+                return Intern(p + start, length, text);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetOrAdd(char[] text)
+        public string Intern(char[] text)
         {
             if (text == null)
             {
                 return null;
             }
 
-            return GetOrAdd(text, 0, text.Length);
+            return Intern(text, 0, text.Length);
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe string GetOrAdd(char[] text, int start, int length)
+        public unsafe string Intern(char[] text, int start, int length)
         {
             if (text == null)
             {
@@ -110,11 +110,11 @@ namespace FrugalCafe
 
             fixed (char* p = text)
             {
-                return GetOrAdd(p + start, length);
+                return Intern(p + start, length);
             }
         }
 
-        public unsafe string GetOrAdd(char* text, int length, string fullText = null)
+        public unsafe string Intern(char* text, int length, string fullText = null)
         {
             if (text == null)
             {
@@ -165,6 +165,90 @@ namespace FrugalCafe
             }
 
             return hash;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe string InternUtf8(byte[] text, int length)
+        {
+            fixed (byte* p = text)
+            {
+                return InternUtf8(p, length);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe string InternUtf8(byte[] text, int start, int length)
+        {
+            fixed (byte * p = text)
+            {
+                return InternUtf8(p + start, length);
+            }
+        }
+
+        public unsafe string InternUtf8(byte* text, int length)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+
+            if (length == 0)
+            {
+                return string.Empty;
+            }
+
+            if (length == 1)
+            {
+                return StringTable.Latin1Strings[text[0]];
+            }
+
+            uint hash = 31;
+
+            byte* end = text + length;
+
+            while (text < end)
+            {
+                byte ch = *text++;
+
+                if (ch >= 128)
+                {
+                    return Encoding.UTF8.GetString(text, length);
+                }
+
+                hash = hash.Combine(ch);
+            }
+
+            uint slot = hash % (uint)_cachedStrings.Length;
+
+            string cached = _cachedStrings[slot];
+
+            if ((cached != null) && (cached.Length == length))
+            {
+                fixed (char* p = cached)
+                {
+                    bool same = true;
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (p[i] != cached[i])
+                        {
+                            same = false;
+                            break;
+                        }
+                    }
+
+                    if (same)
+                    {
+                        return cached;
+                    }
+                }
+            }
+
+            cached = Encoding.UTF8.GetString(text, length);
+
+            _cachedStrings[slot] = cached;
+
+            return cached;
         }
     }
 }

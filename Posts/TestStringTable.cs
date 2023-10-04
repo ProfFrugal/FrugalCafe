@@ -11,8 +11,8 @@ namespace FrugalCafe.Posts
 
             for (int i = 0; i < 10; i++)
             {
-                string cafe1 = table.GetOrAdd("FrugalCafe" + i);
-                string cafe2 = table.GetOrAdd("FrugalCafe" + i);
+                string cafe1 = table.Intern("FrugalCafe" + i);
+                string cafe2 = table.Intern("FrugalCafe" + i);
 
                 Debug.Assert(object.ReferenceEquals(cafe1, cafe2));
 
