@@ -33,6 +33,8 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestFastBinaryReader.Test();
+
             TestStringTable.Test();
 
             string title = "FrugalCafe";

@@ -204,18 +204,21 @@ namespace FrugalCafe
 
             uint hash = 31;
 
-            byte* end = text + length;
-
-            while (text < end)
             {
-                byte ch = *text++;
+                byte* start = text;
+                byte* end = start + length;
 
-                if (ch >= 128)
+                while (start < end)
                 {
-                    return Encoding.UTF8.GetString(text, length);
-                }
+                    byte ch = *start++;
 
-                hash = hash.Combine(ch);
+                    if (ch >= 128)
+                    {
+                        return Encoding.UTF8.GetString(text, length);
+                    }
+
+                    hash = hash.Combine(ch);
+                }
             }
 
             uint slot = hash % (uint)_cachedStrings.Length;
