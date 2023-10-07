@@ -33,6 +33,9 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestEventSource.Test();
+            return;
+
             TestFastBinaryReader.Test();
 
             TestStringTable.Test();

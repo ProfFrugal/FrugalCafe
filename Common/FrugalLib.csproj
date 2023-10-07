@@ -49,6 +49,7 @@
     <Compile Include="DictionaryArray.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="FastBinaryReader.cs" />
+    <Compile Include="FrugalCafeEventSource.cs" />
     <Compile Include="HashHelpers.cs" />
     <Compile Include="IMatcher.cs" />
     <Compile Include="ISimpleStringBuilder.cs" />
