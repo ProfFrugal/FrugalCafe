@@ -33,6 +33,8 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            TestSmallArrayPool.Test();
+
             TestEventSource.Test();
             return;
 

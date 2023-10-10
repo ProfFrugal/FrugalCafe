@@ -135,6 +135,7 @@
     <Compile Include="Posts\TestSegmentedList.cs" />
     <Compile Include="Posts\TestServiceStackText.cs" />
     <Compile Include="Posts\TestSimpleHashSet.cs" />
+    <Compile Include="Posts\TestSmallArrayPool.cs" />
     <Compile Include="Posts\TestSmallDictionary.cs" />
     <Compile Include="Posts\TestStringBuilderCache.cs" />
     <Compile Include="Posts\TestOptimalFormat.cs" />

@@ -12,9 +12,9 @@ namespace FrugalCafe
 
         public SmallArrayPool(int count)
         {
-            if (count > 0)
+            if (count > 1)
             {
-                _array = new T[count][];
+                _array = new T[count - 1][];
             }
         }
 
