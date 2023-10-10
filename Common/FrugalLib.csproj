@@ -39,7 +39,6 @@
       <HintPath>..\packages\Microsoft.Extensions.ObjectPool.7.0.11\lib\net462\Microsoft.Extensions.ObjectPool.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -49,6 +48,7 @@
     <Compile Include="DictionaryArray.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="FastBinaryReader.cs" />
+    <Compile Include="SmallArrayPool.cs" />
     <Compile Include="FrugalCafeEventSource.cs" />
     <Compile Include="HashHelpers.cs" />
     <Compile Include="IMatcher.cs" />

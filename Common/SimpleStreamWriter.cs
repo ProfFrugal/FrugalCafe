@@ -20,7 +20,6 @@ using System;
 using System.Text;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Buffers;
 
 namespace FrugalCafe
 {
@@ -41,8 +40,8 @@ namespace FrugalCafe
         {
             _output = output;
             _encoding = encoding ?? Encoding.UTF8;
-            _charBuffer = ArrayPool<char>.Shared.Rent(CharBufferSize);
-            _byteBuffer = ArrayPool<byte>.Shared.Rent(_encoding.GetMaxByteCount(CharBufferSize));
+            _charBuffer = SmallArrayPool<char>.Shared.Rent(CharBufferSize);
+            _byteBuffer = SmallArrayPool<byte>.Shared.Rent(_encoding.GetMaxByteCount(CharBufferSize));
             _leaveOpen = leaveOpen;
         }
 
@@ -205,8 +204,8 @@ namespace FrugalCafe
                 this.Close();
             }
 
-            ArrayPool<char>.Shared.Return(_charBuffer);
-            ArrayPool<byte>.Shared.Return(_byteBuffer);
+            SmallArrayPool<char>.Shared.Return(_charBuffer);
+            SmallArrayPool<byte>.Shared.Return(_byteBuffer);
         }
     }
 }

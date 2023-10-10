@@ -1,5 +1,4 @@
-﻿using System.Buffers;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace FrugalCafe
@@ -25,7 +24,7 @@ namespace FrugalCafe
         {
             if (_buffer != null)
             {
-                ArrayPool<byte>.Shared.Return(_buffer);
+                SmallArrayPool<byte>.Shared.Return(_buffer);
             }
 
             base.Close();
@@ -46,10 +45,10 @@ namespace FrugalCafe
                 {
                     if (_buffer != null)
                     {
-                        ArrayPool<byte>.Shared.Return(_buffer);
+                        SmallArrayPool<byte>.Shared.Return(_buffer);
                     }
 
-                    _buffer = ArrayPool<byte>.Shared.Rent(len);
+                    _buffer = SmallArrayPool<byte>.Shared.Rent(len);
                 }
 
                 int remain = len;
