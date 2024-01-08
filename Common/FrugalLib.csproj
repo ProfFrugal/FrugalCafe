@@ -65,6 +65,7 @@
     <Compile Include="SimpleStreamWriter.cs" />
     <Compile Include="SingletonArrayPool.cs" />
     <Compile Include="SmallDictionary.cs" />
+    <Compile Include="SmallObjectPool.cs" />
     <Compile Include="SortedList.cs" />
     <Compile Include="StringBuilderExtensions.cs" />
     <Compile Include="StringComparer32.cs" />

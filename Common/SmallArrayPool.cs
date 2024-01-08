@@ -89,6 +89,8 @@ namespace FrugalCafe
                     if (GetLength(_array[i]) < size)
                     {
                         _array[i] = array;
+
+                        break;
                     }
                 }
             }
