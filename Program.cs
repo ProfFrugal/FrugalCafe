@@ -33,6 +33,8 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            FrugalCafe.YouTube.String1.Test();
+
             TestSmallArrayPool.Test();
 
             TestEventSource.Test();

@@ -147,6 +147,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Posts\SlowInit.cs" />
     <Compile Include="Posts\StringIntern.cs" />
+    <Compile Include="YouTube\String1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
