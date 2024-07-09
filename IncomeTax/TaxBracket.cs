@@ -26,7 +26,7 @@ namespace IncomeTax
 
         public double GetTax(double income)
         {
-            if ((income > Min) && (income <= Max))
+            if (income > Min)
             {
                 income = Math.Min(income, Max) - Min;
 

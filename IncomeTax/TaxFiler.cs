@@ -4,6 +4,8 @@ namespace IncomeTax
 {
     public class TaxFiler
     {
+        private static TaxSchedule SocialSecurityTax = new TaxSchedule();
+
         public TaxFilerClass FilrerClass;
         public DateTime Birthday1;
         public DateTime Birthday2;
@@ -19,7 +21,7 @@ namespace IncomeTax
 
         public double GetTax(int year)
         {
-            if (TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
+            if (!TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
             {
                 throw new ArgumentOutOfRangeException(nameof(year));
             }
@@ -27,10 +29,28 @@ namespace IncomeTax
             double ordinary = Wage + InterestIncome + OrdinaryDividens + ShortTermCapitalGain + PretaxAccountWithdrawl;
             double longterm = LongTermCapitalGain + QualifiedDividens;
 
-            ordinary += SocialSecurity * 0.85;
+            if (SocialSecurity > 0)
+            {
+                double incomeTest = ordinary + longterm + SocialSecurity / 2;
+
+                if (incomeTest > 25000)
+                {
+                    double taxableSocialSecurity = SocialSecurity * SocialSecurityTax.GetRate(FilrerClass, incomeTest);
+
+                    ordinary += taxableSocialSecurity;
+                }
+            }
 
             return taxYear.OrdinalIncome.GetTax(FilrerClass, ordinary) + taxYear.LongTermCapitcalGain.GetTax(FilrerClass, longterm);
         }
 
+        static TaxFiler()
+        {
+            SocialSecurityTax.AddTaxBrackets(TaxFilerClass.MarriedFillingJointly, 0, new TaxBracket[]
+            {
+                new TaxBracket(32_000, 44_000, 0.50),
+                new TaxBracket(44_000, double.MaxValue, 0.85)
+            });
+        }
     }
 }

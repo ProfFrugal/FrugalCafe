@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IncomeTax
 {
@@ -10,6 +7,19 @@ namespace IncomeTax
     {
         static void Main(string[] args)
         {
+            var f = new TaxFiler()
+            {
+                FilrerClass = TaxFilerClass.MarriedFillingJointly,
+                InterestIncome = 5_000,
+                OrdinaryDividens = 5_000,
+                QualifiedDividens = 10_000,
+                PretaxAccountWithdrawl= 30_000,
+                SocialSecurity = 30_000
+            };
+
+            var tax = f.GetTax(2024);
+
+            Console.WriteLine(tax);
         }
     }
 }

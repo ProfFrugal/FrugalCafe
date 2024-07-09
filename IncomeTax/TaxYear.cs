@@ -26,6 +26,26 @@ namespace IncomeTax
             }
         }
 
+        public double GetRate(TaxFilerClass klass, double income)
+        {
+            var list = TaxBrackets[(int)klass];
+
+            if (list == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(klass));
+            }
+
+            foreach (var bracket in list)
+            {
+                if ((income > bracket.Min) && (income <= bracket.Max))
+                {
+                    return bracket.Rate;
+                }
+            }
+
+            return 0;
+        }
+
         public double GetTax(TaxFilerClass klass, double taxableIncome)
         {
             var list = TaxBrackets[(int)klass];
