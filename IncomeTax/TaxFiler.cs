@@ -19,9 +19,13 @@ namespace IncomeTax
         public double SocialSecurity;
         public double PretaxAccountWithdrawl;
 
-        public double TotalIncome => Wage + InterestIncome + OrdinaryDividens + QualifiedDividens + ShortTermCapitalGain + LongTermCapitalGain + SocialSecurity + PretaxAccountWithdrawl;
-        
-        public double GetTax(int year, out double rate)
+        public double TotalIncome => OrdinaryIncome + LongTermIncome + SocialSecurity;
+
+        public double OrdinaryIncome => Wage + InterestIncome + OrdinaryDividens + ShortTermCapitalGain + PretaxAccountWithdrawl;
+
+        public double LongTermIncome => LongTermCapitalGain + QualifiedDividens;
+
+        public double GetTax(int year, out double ordinalRate, out double longTermRate, out double socialSecurityRate)
         {
             if (!TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
             {
@@ -31,17 +35,21 @@ namespace IncomeTax
             double ordinary = Wage + InterestIncome + OrdinaryDividens + ShortTermCapitalGain + PretaxAccountWithdrawl;
             double longterm = LongTermCapitalGain + QualifiedDividens;
 
+            socialSecurityRate = 0;
+
             if (SocialSecurity > 0)
             {
                 double modifiedAGI = ordinary + longterm + SocialSecurity / 2;
 
                 double taxableSocialSecurity = SocialSecurityTax[(int)FilterClass].GetTaxable(modifiedAGI, SocialSecurity);
 
+                socialSecurityRate = taxableSocialSecurity / SocialSecurity;
+
                 ordinary += taxableSocialSecurity;
             }
 
-            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary, this, year, out rate) + 
-                   taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm, this, year, out _);
+            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary, this, year, out ordinalRate) + 
+                   taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm, this, year, out longTermRate);
         }
 
         static TaxFiler()

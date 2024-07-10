@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace IncomeTax
 {
@@ -17,12 +18,21 @@ namespace IncomeTax
                 SocialSecurity = 30_000
             };
 
-            var tax = f.GetTax(2024, out double rate);
+            var tax = f.GetTax(2024, out double ordinalRate, out double longTermRate, out double socialSecurityTaxable);
 
-            Console.WriteLine("Total income: ${0:N2}", f.TotalIncome);
-            Console.WriteLine("Federal Tax:  ${0:N2}", tax);
-            Console.WriteLine("Margin Rate:  {0:P2}", tax / f.TotalIncome);
-            Console.WriteLine("Tax bracket:  {0:P2}", rate);
+            TextWriter writer = Console.Out;
+
+            writer.WriteLine("Ordinary income: ${0:N2}", f.OrdinaryIncome);
+            writer.WriteLine("LongTerm income: ${0:N2}", f.LongTermIncome);
+            writer.WriteLine("SocialSe income: ${0:N2}", f.SocialSecurity);
+            writer.WriteLine("Total income   : ${0:N2}", f.TotalIncome);
+            writer.WriteLine();
+
+            writer.WriteLine("Federal Tax:  ${0:N2}", tax);
+            writer.WriteLine("Margin Rate:  {0:P2}", tax / f.TotalIncome);
+            writer.WriteLine("Ordinary bracket:  {0:P2}", ordinalRate);
+            writer.WriteLine("LongTerm bracket:  {0:P2}", longTermRate);
+            writer.WriteLine("SocialSe taxable:  {0:P2}", socialSecurityTaxable);
         }
     }
 }
