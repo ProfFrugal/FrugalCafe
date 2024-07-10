@@ -46,28 +46,44 @@ namespace IncomeTax
             return 0;
         }
 
-        public double GetTax(TaxFilerClass klass, double taxableIncome)
+        public double GetTax(TaxFilerClass klass, double taxableIncome, TaxFiler filter, int year)
         {
-            var list = TaxBrackets[(int)klass];
+            var brackets = TaxBrackets[(int)klass];
 
-            if (list == null)
+            if (brackets == null)
             {
                 throw new ArgumentOutOfRangeException(nameof(klass));
             }
 
-            taxableIncome -= StandardDeductions[(int)klass];
+            double deduction = StandardDeductions[(int)klass];
+
+            if (deduction > 0)
+            {
+                AddSeniorDeduction(ref deduction, filter.Birthday1, year);
+                AddSeniorDeduction(ref deduction, filter.Birthday2, year);
+
+                taxableIncome -= deduction;
+            }
 
             double tax = 0;
 
             if (taxableIncome > 0)
             {
-                foreach (var bracket in list)
+                foreach (var bracket in brackets)
                 {
                     tax += bracket.GetTax(taxableIncome);
                 }
             }
 
             return tax;
+        }
+
+        private void AddSeniorDeduction(ref double deduction, DateTime? birthday, int year)
+        {
+            if (birthday.HasValue && (birthday.Value.Year <= (year - 65)))
+            {
+                deduction += 1950;
+            }
         }
     }
 

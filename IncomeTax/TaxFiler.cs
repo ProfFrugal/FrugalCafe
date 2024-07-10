@@ -7,8 +7,8 @@ namespace IncomeTax
         private static SocailSecurityTaxRange[] SocialSecurityTax = new SocailSecurityTaxRange[4];
 
         public TaxFilerClass FilterClass;
-        public DateTime Birthday1;
-        public DateTime Birthday2;
+        public DateTime? Birthday1;
+        public DateTime? Birthday2;
 
         public double Wage;
         public double InterestIncome;
@@ -19,6 +19,7 @@ namespace IncomeTax
         public double SocialSecurity;
         public double PretaxAccountWithdrawl;
 
+        public double TotalIncome => Wage + InterestIncome + OrdinaryDividens + QualifiedDividens + ShortTermCapitalGain + LongTermCapitalGain + SocialSecurity + PretaxAccountWithdrawl;
         public double GetTax(int year)
         {
             if (!TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
@@ -38,7 +39,8 @@ namespace IncomeTax
                 ordinary += taxableSocialSecurity;
             }
 
-            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary) + taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm);
+            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary, this, year) + 
+                   taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm, this, year);
         }
 
         static TaxFiler()
