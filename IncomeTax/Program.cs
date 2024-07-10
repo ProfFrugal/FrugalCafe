@@ -9,7 +9,7 @@ namespace IncomeTax
         {
             var f = new TaxFiler()
             {
-                FilrerClass = TaxFilerClass.MarriedFillingJointly,
+                FilterClass = TaxFilerClass.MarriedFillingJointly,
                 InterestIncome = 5_000,
                 OrdinaryDividens = 5_000,
                 QualifiedDividens = 10_000,

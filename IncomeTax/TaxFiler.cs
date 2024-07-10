@@ -4,9 +4,9 @@ namespace IncomeTax
 {
     public class TaxFiler
     {
-        private static TaxSchedule SocialSecurityTax = new TaxSchedule();
+        private static SocailSecurityTaxRange[] SocialSecurityTax = new SocailSecurityTaxRange[4];
 
-        public TaxFilerClass FilrerClass;
+        public TaxFilerClass FilterClass;
         public DateTime Birthday1;
         public DateTime Birthday2;
 
@@ -31,26 +31,23 @@ namespace IncomeTax
 
             if (SocialSecurity > 0)
             {
-                double incomeTest = ordinary + longterm + SocialSecurity / 2;
+                double modifiedAGI = ordinary + longterm + SocialSecurity / 2;
 
-                if (incomeTest > 25000)
-                {
-                    double taxableSocialSecurity = SocialSecurity * SocialSecurityTax.GetRate(FilrerClass, incomeTest);
+                double taxableSocialSecurity = SocialSecurityTax[(int)FilterClass].GetTaxable(modifiedAGI, SocialSecurity);
 
-                    ordinary += taxableSocialSecurity;
-                }
+                ordinary += taxableSocialSecurity;
             }
 
-            return taxYear.OrdinalIncome.GetTax(FilrerClass, ordinary) + taxYear.LongTermCapitcalGain.GetTax(FilrerClass, longterm);
+            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary) + taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm);
         }
 
         static TaxFiler()
         {
-            SocialSecurityTax.AddTaxBrackets(TaxFilerClass.MarriedFillingJointly, 0, new TaxBracket[]
+            SocialSecurityTax[(int)TaxFilerClass.MarriedFillingJointly] = new SocailSecurityTaxRange()
             {
-                new TaxBracket(32_000, 44_000, 0.50),
-                new TaxBracket(44_000, double.MaxValue, 0.85)
-            });
+                Start50 = 32_000,
+                Start85 = 44_000
+            };
         }
     }
 }
