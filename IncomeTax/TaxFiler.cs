@@ -12,8 +12,8 @@ namespace IncomeTax
 
         public double Wage;
         public double InterestIncome;
-        public double OrdinaryDividens;
-        public double QualifiedDividens;
+        public double OrdinaryDivident;
+        public double QualifiedDivident;
         public double ShortTermCapitalGain;
         public double LongTermCapitalGain;
         public double SocialSecurity;
@@ -21,9 +21,9 @@ namespace IncomeTax
 
         public double TotalIncome => OrdinaryIncome + LongTermIncome + SocialSecurity;
 
-        public double OrdinaryIncome => Wage + InterestIncome + OrdinaryDividens + ShortTermCapitalGain + PretaxAccountWithdrawl;
+        public double OrdinaryIncome => Wage + InterestIncome + OrdinaryDivident + ShortTermCapitalGain + PretaxAccountWithdrawl;
 
-        public double LongTermIncome => LongTermCapitalGain + QualifiedDividens;
+        public double LongTermIncome => LongTermCapitalGain + QualifiedDivident;
 
         public double GetTax(int year, out double ordinalRate, out double longTermRate, out double socialSecurityRate)
         {
@@ -32,8 +32,8 @@ namespace IncomeTax
                 throw new ArgumentOutOfRangeException(nameof(year));
             }
 
-            double ordinary = Wage + InterestIncome + OrdinaryDividens + ShortTermCapitalGain + PretaxAccountWithdrawl;
-            double longterm = LongTermCapitalGain + QualifiedDividens;
+            double ordinary = Wage + InterestIncome + OrdinaryDivident + ShortTermCapitalGain + PretaxAccountWithdrawl;
+            double longterm = LongTermCapitalGain + QualifiedDivident;
 
             socialSecurityRate = 0;
 

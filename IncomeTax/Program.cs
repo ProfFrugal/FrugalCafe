@@ -12,8 +12,8 @@ namespace IncomeTax
             {
                 FilterClass = TaxFilerClass.MarriedFillingJointly,
                 InterestIncome = 5_000,
-                OrdinaryDividens = 5_000,
-                QualifiedDividens = 10_000,
+                OrdinaryDivident = 5_000,
+                QualifiedDivident = 10_000,
                 PretaxAccountWithdrawl= 30_000,
                 SocialSecurity = 30_000
             };
