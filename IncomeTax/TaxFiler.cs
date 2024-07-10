@@ -20,7 +20,8 @@ namespace IncomeTax
         public double PretaxAccountWithdrawl;
 
         public double TotalIncome => Wage + InterestIncome + OrdinaryDividens + QualifiedDividens + ShortTermCapitalGain + LongTermCapitalGain + SocialSecurity + PretaxAccountWithdrawl;
-        public double GetTax(int year)
+        
+        public double GetTax(int year, out double rate)
         {
             if (!TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
             {
@@ -39,8 +40,8 @@ namespace IncomeTax
                 ordinary += taxableSocialSecurity;
             }
 
-            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary, this, year) + 
-                   taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm, this, year);
+            return taxYear.OrdinalIncome.GetTax(FilterClass, ordinary, this, year, out rate) + 
+                   taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm, this, year, out _);
         }
 
         static TaxFiler()

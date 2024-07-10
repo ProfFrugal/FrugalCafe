@@ -17,11 +17,12 @@ namespace IncomeTax
                 SocialSecurity = 30_000
             };
 
-            var tax = f.GetTax(2024);
+            var tax = f.GetTax(2024, out double rate);
 
             Console.WriteLine("Total income: ${0:N2}", f.TotalIncome);
             Console.WriteLine("Federal Tax:  ${0:N2}", tax);
             Console.WriteLine("Margin Rate:  {0:P2}", tax / f.TotalIncome);
+            Console.WriteLine("Tax bracket:  {0:P2}", rate);
         }
     }
 }

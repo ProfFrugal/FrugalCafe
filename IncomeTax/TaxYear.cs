@@ -46,7 +46,7 @@ namespace IncomeTax
             return 0;
         }
 
-        public double GetTax(TaxFilerClass klass, double taxableIncome, TaxFiler filter, int year)
+        public double GetTax(TaxFilerClass klass, double taxableIncome, TaxFiler filter, int year, out double rate)
         {
             var brackets = TaxBrackets[(int)klass];
 
@@ -67,11 +67,22 @@ namespace IncomeTax
 
             double tax = 0;
 
+            rate = 0;
+
             if (taxableIncome > 0)
             {
                 foreach (var bracket in brackets)
                 {
-                    tax += bracket.GetTax(taxableIncome);
+                    double t = bracket.GetTax(taxableIncome);
+
+                    if (t == 0)
+                    {
+                        break;
+                    }
+
+                    rate = bracket.Rate;
+
+                    tax += t;
                 }
             }
 
