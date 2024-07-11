@@ -7,7 +7,7 @@ namespace IncomeTax
     {
         private static SocailSecurityTaxRange[] SocialSecurityTax = new SocailSecurityTaxRange[4];
 
-        public TaxFilerClass FilterClass;
+        public TaxFilerClass FilerClass;
         public DateTime? Birthday1;
         public DateTime? Birthday2;
 
@@ -17,47 +17,47 @@ namespace IncomeTax
         public double QualifiedDivident;
         public double ShortTermCapitalGain;
         public double LongTermCapitalGain;
-        public double SocialSecurity;
-        public double PretaxAccountWithdrawl;
+        public double SocialSecurityBenefit;
+        public double IRAWithdrawl;
 
-        public double TotalIncome => OrdinaryIncome + LongTermIncome + SocialSecurity;
+        public double TotalIncome => OrdinaryIncome + LongTermIncome + SocialSecurityBenefit;
 
-        public double OrdinaryIncome => Wage + InterestIncome + OrdinaryDivident + ShortTermCapitalGain + PretaxAccountWithdrawl;
+        public double OrdinaryIncome => Wage + InterestIncome + OrdinaryDivident + ShortTermCapitalGain + IRAWithdrawl;
 
         public double LongTermIncome => LongTermCapitalGain + QualifiedDivident;
 
-        public double GetTax(int year, out double ordinalRate, out double longTermRate, out double socialSecurityRate, TextWriter writer)
+        public double GetTax(int year, out double ordinalRate, TextWriter writer)
         {
             if (!TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
             {
                 throw new ArgumentOutOfRangeException(nameof(year));
             }
 
-            double ordinary = Wage + InterestIncome + OrdinaryDivident + ShortTermCapitalGain + PretaxAccountWithdrawl;
+            double ordinary = Wage + InterestIncome + OrdinaryDivident + ShortTermCapitalGain + IRAWithdrawl;
             double longterm = LongTermCapitalGain + QualifiedDivident;
 
-            socialSecurityRate = 0;
+            double socialSecurityRate = 0;
 
-            if (SocialSecurity > 0)
+            if (SocialSecurityBenefit > 0)
             {
-                double modifiedAGI = ordinary + longterm + SocialSecurity / 2;
+                double modifiedAGI = ordinary + longterm + SocialSecurityBenefit / 2;
 
-                double taxableSocialSecurity = SocialSecurityTax[(int)FilterClass].GetTaxable(modifiedAGI, SocialSecurity);
+                double taxableSocialSecurity = SocialSecurityTax[(int)FilerClass].GetTaxable(modifiedAGI, SocialSecurityBenefit);
 
-                socialSecurityRate = taxableSocialSecurity / SocialSecurity;
+                socialSecurityRate = taxableSocialSecurity / SocialSecurityBenefit;
 
                 ordinary += taxableSocialSecurity;
             }
 
-            double tax = taxYear.OrdinalIncome.GetTax(FilterClass, ordinary, this, year, out ordinalRate) + 
-                   taxYear.LongTermCapitcalGain.GetTax(FilterClass, longterm, this, year, out longTermRate);
+            double tax = taxYear.OrdinalIncome.GetTax(FilerClass, ordinary, this, year, out ordinalRate) + 
+                   taxYear.LongTermCapitcalGain.GetTax(FilerClass, longterm, this, year, out double longTermRate);
 
             if (writer != null)
             {
                 writer.WriteLine("Ordinary income: ${0:N2}", OrdinaryIncome);
                 writer.WriteLine("LongTerm income: ${0:N2}", LongTermIncome);
-                writer.WriteLine("SocialSe income: ${0:N2}", SocialSecurity);
-                writer.WriteLine("401K withdrawl : ${0:N2}", PretaxAccountWithdrawl);
+                writer.WriteLine("SocialSe income: ${0:N2}", SocialSecurityBenefit);
+                writer.WriteLine("401K withdrawl : ${0:N2}", IRAWithdrawl);
                 writer.WriteLine("Total income   : ${0:N2}", TotalIncome);
                 writer.WriteLine();
 
@@ -71,7 +71,7 @@ namespace IncomeTax
             return tax;
         }
 
-        public double MaxWithdrawl(int year, double marginRate)
+        public double MaximumIRAWithdrawl(int year, double marginRate)
         {
             double min = 0;
             double max = 200 * 1000;
@@ -80,9 +80,9 @@ namespace IncomeTax
             {
                 double mid = (min + max) / 2;
 
-                PretaxAccountWithdrawl = mid;
+                IRAWithdrawl = mid;
 
-                GetTax(year, out double ordinalRate, out _, out _, null);
+                GetTax(year, out double ordinalRate, null);
 
                 if (ordinalRate > marginRate)
                 {
@@ -94,7 +94,7 @@ namespace IncomeTax
                     min = mid;
                 }
 
-                if ((max - min) < 0.5)
+                if ((max - min) < 0.01)
                 {
                     break;
                 }
