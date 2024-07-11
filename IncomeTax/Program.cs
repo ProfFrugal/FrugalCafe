@@ -18,21 +18,27 @@ namespace IncomeTax
                 SocialSecurity = 30_000
             };
 
-            var tax = f.GetTax(2024, out double ordinalRate, out double longTermRate, out double socialSecurityTaxable);
-
             TextWriter writer = Console.Out;
 
-            writer.WriteLine("Ordinary income: ${0:N2}", f.OrdinaryIncome);
-            writer.WriteLine("LongTerm income: ${0:N2}", f.LongTermIncome);
-            writer.WriteLine("SocialSe income: ${0:N2}", f.SocialSecurity);
-            writer.WriteLine("Total income   : ${0:N2}", f.TotalIncome);
+            var tax = f.GetTax(2024, out double ordinalRate, out double longTermRate, out double socialSecurityTaxable, writer);
+
+            double max401K = f.MaxWithdrawl(2024, 0.12);
+
+            writer.WriteLine();
+            writer.WriteLine("Maximum 401K withdrawl for {0:P2}: ${1:N2}", 0.12, max401K);
             writer.WriteLine();
 
-            writer.WriteLine("Federal Tax:  ${0:N2}", tax);
-            writer.WriteLine("Margin Rate:  {0:P2}", tax / f.TotalIncome);
-            writer.WriteLine("Ordinary bracket:  {0:P2}", ordinalRate);
-            writer.WriteLine("LongTerm bracket:  {0:P2}", longTermRate);
-            writer.WriteLine("SocialSe taxable:  {0:P2}", socialSecurityTaxable);
+            tax = f.GetTax(2024, out ordinalRate, out longTermRate, out socialSecurityTaxable, writer);
+
+            f.SocialSecurity = 0;
+
+            max401K = f.MaxWithdrawl(2024, 0.12);
+
+            writer.WriteLine();
+            writer.WriteLine("No social security, maximum 401K withdrawl for {0:P2}: ${1:N2}", 0.12, max401K);
+            writer.WriteLine();
+
+            tax = f.GetTax(2024, out ordinalRate, out longTermRate, out socialSecurityTaxable, writer);
         }
     }
 }
