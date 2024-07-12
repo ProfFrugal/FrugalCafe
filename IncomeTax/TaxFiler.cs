@@ -49,8 +49,12 @@ namespace IncomeTax
                 ordinary += taxableSocialSecurity;
             }
 
-            double tax = taxYear.OrdinalIncome.GetTax(FilerClass, ordinary, this, year, out ordinalRate) + 
-                   taxYear.LongTermCapitcalGain.GetTax(FilerClass, longterm, this, year, out double longTermRate);
+            double deduction = taxYear.OrdinalIncome.GetDeduction(year, this);
+
+            ordinary -= deduction;
+
+            double tax = taxYear.OrdinalIncome.GetTax(ordinary, this, year, out ordinalRate) + 
+                   taxYear.LongTermCapitcalGain.GetTax(longterm, this, year, out double longTermRate);
 
             if (writer != null)
             {

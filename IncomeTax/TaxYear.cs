@@ -46,23 +46,26 @@ namespace IncomeTax
             return 0;
         }
 
-        public double GetTax(TaxFilerClass klass, double taxableIncome, TaxFiler filter, int year, out double rate)
+        public double GetDeduction(int year, TaxFiler filer)
         {
-            var brackets = TaxBrackets[(int)klass];
-
-            if (brackets == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(klass));
-            }
-
-            double deduction = StandardDeductions[(int)klass];
+            double deduction = StandardDeductions[(int)filer.FilerClass];
 
             if (deduction > 0)
             {
-                AddSeniorDeduction(ref deduction, filter.Birthday1, year);
-                AddSeniorDeduction(ref deduction, filter.Birthday2, year);
+                AddSeniorDeduction(ref deduction, filer.Birthday1, year);
+                AddSeniorDeduction(ref deduction, filer.Birthday2, year);
+            }
 
-                taxableIncome -= deduction;
+            return deduction;
+        }
+
+        public double GetTax(double taxableIncome, TaxFiler filer, int year, out double rate)
+        {
+            var brackets = TaxBrackets[(int)filer.FilerClass];
+
+            if (brackets == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(filer));
             }
 
             double tax = 0;
