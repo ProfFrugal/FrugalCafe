@@ -24,13 +24,20 @@ namespace IncomeTax
             Rate = rate;
         }
 
-        public double GetTax(double income)
+        public double GetTax(double baseIncome, ref double income)
         {
-            if (income > Min)
+            if (baseIncome + income > Min)
             {
-                income = Math.Min(income, Max) - Min;
+                var inbracket = Math.Min(baseIncome + income, Max) - Min;
 
-                return income * Rate;
+                if (inbracket > income)
+                {
+                    inbracket = income;
+                }
+
+                income -= inbracket;
+
+                return inbracket * Rate;
             }
 
             return 0;

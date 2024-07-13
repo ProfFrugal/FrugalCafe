@@ -26,7 +26,7 @@ namespace IncomeTax
 
         public double LongTermIncome => LongTermCapitalGain + QualifiedDivident;
 
-        public double GetTax(int year, out double ordinalRate, TextWriter writer)
+        public double GetTax(int year, out double maxRate, TextWriter writer)
         {
             if (!TaxYear.TaxYears.TryGetValue(year, out TaxYear taxYear))
             {
@@ -53,8 +53,18 @@ namespace IncomeTax
 
             ordinary -= deduction;
 
-            double tax = taxYear.OrdinalIncome.GetTax(ordinary, this, year, out ordinalRate) + 
-                   taxYear.LongTermCapitcalGain.GetTax(longterm, this, year, out double longTermRate);
+            if (ordinary < 0)
+            {
+                longterm = Math.Max(0, longterm + ordinary);
+                ordinary = 0;
+            }
+
+            double ordinalTax = taxYear.OrdinalIncome.GetTax(0, ordinary, this, year, out double ordinalRate);
+            double capitalGainTax = taxYear.LongTermCapitcalGain.GetTax(ordinary, longterm, this, year, out double longTermRate);
+
+            maxRate = Math.Max(longTermRate, ordinalRate);
+
+            double tax = ordinalTax + capitalGainTax;
 
             if (writer != null)
             {
@@ -63,9 +73,16 @@ namespace IncomeTax
                 writer.WriteLine("SocialSe income: ${0:N2}", SocialSecurityBenefit);
                 writer.WriteLine("401K withdrawl : ${0:N2}", IRAWithdrawl);
                 writer.WriteLine("Total income   : ${0:N2}", TotalIncome);
+
+                writer.WriteLine("Deduction      : ${0:N2}", deduction);
+                writer.WriteLine("Modified AGI   : ${0:N2}", ordinary + longterm);
+
                 writer.WriteLine();
 
                 writer.WriteLine("Federal Tax:  ${0:N2}", tax);
+                writer.WriteLine("Ordinal Tax:  ${0:N2}", ordinalTax);
+                writer.WriteLine("Long Gain Tax:${0:N2}", capitalGainTax);
+
                 writer.WriteLine("Margin Rate:  {0:P2}", tax / TotalIncome);
                 writer.WriteLine("Ordinary bracket:  {0:P2}", ordinalRate);
                 writer.WriteLine("LongTerm bracket:  {0:P2}", longTermRate);

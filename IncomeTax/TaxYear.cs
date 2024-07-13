@@ -59,7 +59,7 @@ namespace IncomeTax
             return deduction;
         }
 
-        public double GetTax(double taxableIncome, TaxFiler filer, int year, out double rate)
+        public double GetTax(double baseIncome, double taxableIncome, TaxFiler filer, int year, out double marginRate)
         {
             var brackets = TaxBrackets[(int)filer.FilerClass];
 
@@ -70,22 +70,30 @@ namespace IncomeTax
 
             double tax = 0;
 
-            rate = 0;
+            marginRate = 0;
 
             if (taxableIncome > 0)
             {
-                foreach (var bracket in brackets)
+                for (int i = brackets.Length - 1; i >= 0; i--)
                 {
-                    double t = bracket.GetTax(taxableIncome);
+                    var bracket = brackets[i];
 
-                    if (t == 0)
+                    double t = bracket.GetTax(baseIncome, ref taxableIncome);
+
+                    if (t > 0)
                     {
-                        break;
+                        if (marginRate == 0)
+                        {
+                            marginRate = bracket.Rate;
+                        }
+
+                        tax += t;
+
+                        if (taxableIncome <= 0)
+                        {
+                            break;
+                        }
                     }
-
-                    rate = bracket.Rate;
-
-                    tax += t;
                 }
             }
 
