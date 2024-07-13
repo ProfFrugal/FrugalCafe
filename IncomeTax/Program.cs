@@ -35,7 +35,7 @@ namespace IncomeTax
             max401K = f.MaximumIRAWithdrawl(2024, 0.12);
 
             writer.WriteLine();
-            writer.WriteLine("No social security, maximum 401K withdrawl for {0:P2}: ${1:N2} tax bracket", 0.12, max401K);
+            writer.WriteLine("No social security, maximum 401K withdrawl for {0:P2} tax bracket: ${1:N2}", 0.12, max401K);
             writer.WriteLine();
 
             tax = f.GetTax(2024, out _, writer);
