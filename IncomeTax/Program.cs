@@ -4,6 +4,21 @@ using System.IO;
 
 namespace IncomeTax
 {
+    public enum TaxKind
+    {
+        SocialSecurity,
+        Medicare,
+        AdditionalMedicareTax,
+
+        Ordinal,
+        LongTermCapitalGain,
+        NetInvestmentIncome,
+        MedicareIRMAA,
+
+        State,
+        City
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -11,11 +26,12 @@ namespace IncomeTax
             var f = new TaxFiler()
             {
                 FilerClass = TaxFilerClass.MarriedFillingJointly,
-                InterestIncome = 5_000,
-                OrdinaryDivident = 5_000,
+                InterestIncome = 1_000,
+                OrdinaryDivident = 1_000,
                 QualifiedDivident = 10_000,
-                IRAWithdrawl= 30_000,
-                SocialSecurityBenefit = 30_000
+                LongTermCapitalGain = 10_000,
+                IRAWithdrawl= 20_000,
+                SocialSecurityBenefit = 33_000
             };
 
             TextWriter writer = Console.Out;

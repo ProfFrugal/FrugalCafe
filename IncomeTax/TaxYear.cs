@@ -133,7 +133,7 @@ namespace IncomeTax
 
             y2024.OrdinalIncome.AddTaxBrackets(TaxFilerClass.MarriedFillingJointly, 29_200, new TaxBracket[]
                 {
-                    new TaxBracket(0, 23_200, 0.1),
+                    new TaxBracket(0, 23_200, 0.10),
                     new TaxBracket(23_200, 94_300, 0.12),
                     new TaxBracket(94_300, 201_050, 0.22),
                     new TaxBracket(201_050, 383_900, 0.24),

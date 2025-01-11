@@ -37,12 +37,13 @@ namespace IncomeTax
             double longterm = LongTermCapitalGain + QualifiedDivident;
 
             double socialSecurityRate = 0;
+            double taxableSocialSecurity = 0;
 
             if (SocialSecurityBenefit > 0)
             {
                 double modifiedAGI = ordinary + longterm + SocialSecurityBenefit / 2;
 
-                double taxableSocialSecurity = SocialSecurityTax[(int)FilerClass].GetTaxable(modifiedAGI, SocialSecurityBenefit);
+                taxableSocialSecurity = SocialSecurityTax[(int)FilerClass].GetTaxable(modifiedAGI, SocialSecurityBenefit);
 
                 socialSecurityRate = taxableSocialSecurity / SocialSecurityBenefit;
 
@@ -68,11 +69,14 @@ namespace IncomeTax
 
             if (writer != null)
             {
-                writer.WriteLine("Ordinary income: ${0:N2}", OrdinaryIncome);
-                writer.WriteLine("LongTerm income: ${0:N2}", LongTermIncome);
-                writer.WriteLine("SocialSe income: ${0:N2}", SocialSecurityBenefit);
+                writer.WriteLine("SocialSe income: ${0:N2}, {1:P2} taxable, ${2:N2}", SocialSecurityBenefit, socialSecurityRate, taxableSocialSecurity);
                 writer.WriteLine("401K withdrawl : ${0:N2}", IRAWithdrawl);
+                writer.WriteLine("Ordinary income: ${0:N2}", ordinary + deduction);
+                writer.WriteLine("LongTerm income: ${0:N2}", LongTermIncome);
+                writer.WriteLine();
+
                 writer.WriteLine("Total income   : ${0:N2}", TotalIncome);
+                writer.WriteLine();
 
                 writer.WriteLine("Deduction      : ${0:N2}", deduction);
                 writer.WriteLine("Modified AGI   : ${0:N2}", ordinary + longterm);
@@ -86,7 +90,6 @@ namespace IncomeTax
                 writer.WriteLine("Margin Rate:  {0:P2}", tax / TotalIncome);
                 writer.WriteLine("Ordinary bracket:  {0:P2}", ordinalRate);
                 writer.WriteLine("LongTerm bracket:  {0:P2}", longTermRate);
-                writer.WriteLine("SocialSe taxable:  {0:P2}", socialSecurityRate);
             }
 
             return tax;
