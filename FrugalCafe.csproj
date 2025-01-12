@@ -112,6 +112,7 @@
     <Compile Include="Posts\CSharpLanguage.cs" />
     <Compile Include="Posts\DictionaryCorruption.cs" />
     <Compile Include="Posts\Json.cs" />
+    <Compile Include="Posts\NGram.cs" />
     <Compile Include="Posts\NSquare.cs" />
     <Compile Include="Posts\RegularExpression.cs" />
     <Compile Include="Posts\ReplaceChunk.cs" />
