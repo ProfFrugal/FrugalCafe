@@ -33,6 +33,9 @@ namespace FrugalCafe
 
         static void Main(string[] args)
         {
+            NGram.Test();
+            return;
+
             FrugalCafe.YouTube.String1.Test();
 
             TestSmallArrayPool.Test();

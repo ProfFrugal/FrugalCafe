@@ -92,5 +92,36 @@ namespace FrugalCafe.Posts
             return (magnitude1 > 0 && magnitude2 > 0) ?
                 dotProduct / (magnitude1 * magnitude2) : 0;
         }
+
+        public static void Test()
+        {
+            string text1 = "software engineer";
+            string text2 = "senior software engineer";
+
+            var ngram = new NGram();
+
+            double cos1 = 0, cos2 = 0;
+            int count = 100000;
+
+            PerfTest.MeasurePerf(
+                () => 
+                {
+                    var list1 = GetNGrams(text1, 3);
+                    var list2 = GetNGrams(text2, 3);
+                    cos1 = CosineSimilarity(list1, list2);
+                },
+                "Elliot One - CosineSimilarity", count);
+
+            PerfTest.MeasurePerf(
+                () =>
+                {
+                    cos2 = ngram.CosineSimilarity(text1, text2, 3);
+                },
+                "Feng Yuan - CosineSimilarity", count);
+
+            Console.WriteLine();
+            Console.WriteLine(cos1);
+            Console.WriteLine(cos2);
+        }
     }
 }
