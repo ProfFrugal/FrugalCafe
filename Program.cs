@@ -102,7 +102,7 @@ namespace FrugalCafe
             TestStringBuilderCache.Test();
             return;
 
-            //TestEnumHelper.Test();
+            //TestEnumHelper.TestCase();
             //return;
 
             TestPCCategory.Test();

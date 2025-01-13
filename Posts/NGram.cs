@@ -107,16 +107,13 @@ namespace FrugalCafe.Posts
                 dotProduct / (magnitude1 * magnitude2) : 0;
         }
 
-        public static void Test()
+        public static void TestCase(string text1, string text2)
         {
-            string text1 = "software engineer";
-            string text2 = "senior software engineer";
-
             double cos1 = 0, cos2 = 0;
             int count = 100000;
 
             PerfTest.MeasurePerf(
-                () => 
+                () =>
                 {
                     var list1 = GetNGrams(text1, 3);
                     var list2 = GetNGrams(text2, 3);
@@ -132,8 +129,22 @@ namespace FrugalCafe.Posts
                 "Feng Yuan - CosineSimilarity", count);
 
             Console.WriteLine();
+            Console.WriteLine("{0} {1}", text1.Length, text2.Length);
             Console.WriteLine(cos1);
             Console.WriteLine(cos2);
+        }
+
+        public static void Test()
+        {
+            string text1 = "software engineer";
+            string text2 = "senior software engineer";
+
+            TestCase(text1, text2);
+
+            text1 = "Man Fired From Microsoft After 22 Years Becomes Goose Farmer";
+            text2 = "Software Performance Architect Fired From Microsoft After 23 Years Becomes Goose Farmer";
+
+            TestCase(text1, text2);
         }
     }
 }
