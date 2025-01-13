@@ -23,11 +23,11 @@ namespace FrugalCafe.Posts
                 return 1;
             }
 
-            var ngram1 = new Dictionary<ulong, int>(text1.Length - 1 + n);
+            var ngram1 = new Dictionary<ulong, int>(text1.Length - n + 1);
         
             NGram.GetNgrams(text1, n, ngram1);
 
-            var ngram2 = new Dictionary<ulong, int>(text2.Length - 1 + n);
+            var ngram2 = new Dictionary<ulong, int>(text2.Length - n + 1);
 
             foreach (var k in ngram1.Keys)
             {
