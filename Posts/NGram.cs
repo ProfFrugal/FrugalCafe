@@ -6,28 +6,42 @@ namespace FrugalCafe.Posts
 {
     public class NGram
     {
-        private Dictionary<ulong, int> ngram1 = new Dictionary<ulong, int>();
-        private Dictionary<ulong, int> ngram2 = new Dictionary<ulong, int>();
-
-        public double CosineSimilarity(string text1, string text2, int n)
+        public static double CosineSimilarity(string text1, string text2, int n)
         {
-            this.ngram1.Clear();
-            NGram.GetNgrams(text1, n, this.ngram1);
-            this.ngram2.Clear();
-
-            foreach (var k in this.ngram1.Keys)
+            if (text1 == null || text1.Length < n)
             {
-                this.ngram2[k] = 0;
+                return 0;
             }
 
-            NGram.GetNgrams(text2, n, this.ngram2);
+            if (text2 == null || text2.Length < n)
+            {
+                return 0;
+            }
+
+            if (text1 == text2)
+            {
+                return 1;
+            }
+
+            var ngram1 = new Dictionary<ulong, int>(text1.Length - 1 + n);
+        
+            NGram.GetNgrams(text1, n, ngram1);
+
+            var ngram2 = new Dictionary<ulong, int>(text2.Length - 1 + n);
+
+            foreach (var k in ngram1.Keys)
+            {
+                ngram2[k] = 0;
+            }
+
+            NGram.GetNgrams(text2, n, ngram2);
 
             double dotProduct = 0, magnitude1 = 0, magnitude2 = 0;
-            int count1 = this.ngram1.Count;
+            int count1 = ngram1.Count;
 
-            using (var enum1 = this.ngram1.Values.GetEnumerator())
+            using (var enum1 = ngram1.Values.GetEnumerator())
             {
-                foreach (var y in this.ngram2.Values)
+                foreach (var y in ngram2.Values)
                 {
                     if (count1-- > 0)
                     {
@@ -98,8 +112,6 @@ namespace FrugalCafe.Posts
             string text1 = "software engineer";
             string text2 = "senior software engineer";
 
-            var ngram = new NGram();
-
             double cos1 = 0, cos2 = 0;
             int count = 100000;
 
@@ -115,7 +127,7 @@ namespace FrugalCafe.Posts
             PerfTest.MeasurePerf(
                 () =>
                 {
-                    cos2 = ngram.CosineSimilarity(text1, text2, 3);
+                    cos2 = CosineSimilarity(text1, text2, 3);
                 },
                 "Feng Yuan - CosineSimilarity", count);
 
