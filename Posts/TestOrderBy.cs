@@ -7,6 +7,8 @@ namespace FrugalCafe.Posts
     {
         public string Name;
         public double Price;
+        public double ListPrice;
+        public double Size;
     }
 
     internal class TestOrderBy

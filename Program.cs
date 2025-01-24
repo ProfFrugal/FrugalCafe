@@ -1,7 +1,10 @@
 ﻿using FrugalCafe.Posts;
+using ServiceStack;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace FrugalCafe
 {
@@ -30,6 +33,52 @@ namespace FrugalCafe
             return "\"" + str + "\"";
         }
 
+        public List<Product> GetProducts()
+        {
+            return new List<Product>();
+        }
+
+        public List<Product> OrderByWithThenByMethod()
+        {
+            var productList = GetProducts();
+
+            productList = productList.OrderBy(x => x.Name)
+                .ThenBy(x => x.ListPrice)
+                .ThenBy(x => x.Size)
+                .ToList();
+
+            return productList;
+        }
+
+        public static KeyValuePair<char, int> GetMostRepeatedCharacterWithCount(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException("Text cannot be null or empty");
+            }
+
+            var charDictionary = new Dictionary<char, int>();
+
+            foreach (char chr in text)
+            {
+                if (chr != ' ')
+                {
+                    charDictionary[chr] = charDictionary.TryGetValue(chr, out int value) ? ++value : 1;
+                }
+            }
+
+            var max = default(KeyValuePair<char, int>);
+
+            foreach(var kv in charDictionary)
+            {
+                if (kv.Value > max.Value)
+                {
+                    max = kv;
+                }
+            }
+
+            return max;
+        }
 
         static void Main(string[] args)
         {

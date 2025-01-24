@@ -96,7 +96,7 @@ namespace FrugalCafe.Posts
         { 
             var allGrams = list1.Union(list2).ToList();
 
-            var vector1 = allGrams.Select(g => list1.Count(x => x ==g)).ToArray();
+            var vector1 = allGrams.Select(g => list1.Count(x => x == g)).ToArray();
             var vector2 = allGrams.Select(g => list2.Count(x => x == g)).ToArray();
 
             double dotProduct = vector1.Zip(vector2, (a, b) => a * b).Sum();
@@ -107,9 +107,23 @@ namespace FrugalCafe.Posts
                 dotProduct / (magnitude1 * magnitude2) : 0;
         }
 
+        static double CopilotCosineSimilarity(List<string> list1, List<string> list2)
+        {
+            var dict1 = list1.GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+            var dict2 = list2.GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+
+            var allGrams = dict1.Keys.Union(dict2.Keys);
+
+            double dotProduct = allGrams.Sum(g => (dict1.ContainsKey(g) ? dict1[g] : 0) * (dict2.ContainsKey(g) ? dict2[g] : 0));
+            double magnitude1 = Math.Sqrt(dict1.Values.Sum(v => v * v));
+            double magnitude2 = Math.Sqrt(dict2.Values.Sum(v => v * v));
+
+            return (magnitude1 > 0 && magnitude2 > 0) ? dotProduct / (magnitude1 * magnitude2) : 0;
+        }
+
         public static void TestCase(string text1, string text2)
         {
-            double cos1 = 0, cos2 = 0;
+            double cos1 = 0, cos2 = 0, cos3 = 0;
             int count = 100000;
 
             PerfTest.MeasurePerf(
@@ -128,10 +142,20 @@ namespace FrugalCafe.Posts
                 },
                 "Feng Yuan - CosineSimilarity", count);
 
+            PerfTest.MeasurePerf(
+                () =>
+                {
+                    var list1 = GetNGrams(text1, 3);
+                    var list2 = GetNGrams(text2, 3);
+                    cos3 = CopilotCosineSimilarity(list1, list2);
+                },
+                "Copilot - CosineSimilarity", count);
+
             Console.WriteLine();
             Console.WriteLine("{0} {1}", text1.Length, text2.Length);
             Console.WriteLine(cos1);
             Console.WriteLine(cos2);
+            Console.WriteLine(cos3);
         }
 
         public static void Test()
