@@ -1,15 +1,21 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Weiqi;
+
+public enum StoneColor
+{
+    Black,
+    White
+}
+
+public class Stone
+{
+    public StoneColor Color { get; set; }
+}
 
 /// <summary>  
 /// Interaction logic for MainWindow.xaml  
@@ -18,7 +24,9 @@ public partial class MainWindow : Window
 {
     private const int BoardSize = 19;
     private const double Margin = 20;
-    private readonly Dictionary<(int, int), string> _stonePositions = new(); // Stores stone positions and colors
+
+    private readonly Stone?[,] _stonePositions = new Stone[BoardSize, BoardSize]; // Stores stone objects  
+    private StoneColor _nextMover = StoneColor.Black; 
 
     public MainWindow()
     {
@@ -86,10 +94,16 @@ public partial class MainWindow : Window
             }
         }
 
-        // Redraw existing stones
-        foreach (var ((x, y), color) in _stonePositions)
+        // Redraw existing stones  
+        for (int x = 0; x < BoardSize; x++)
         {
-            DrawStone(x, y, color, cellSize);
+            for (int y = 0; y < BoardSize; y++)
+            {
+                if (_stonePositions[x, y] != null)
+                {
+                    DrawStone(x, y, _stonePositions[x, y].Color, cellSize);
+                }
+            }
         }
     }
 
@@ -107,15 +121,16 @@ public partial class MainWindow : Window
         int y = (int)Math.Round((clickPosition.Y - Margin) / cellSize);
 
         // Ensure the click is within bounds  
-        if (x < 0 || x >= BoardSize || y < 0 || y >= BoardSize || _stonePositions.ContainsKey((x, y)))
+        if (x < 0 || x >= BoardSize || y < 0 || y >= BoardSize || _stonePositions[x, y] != null)
             return;
 
         // Alternate between black and white stones  
-        string color = _stonePositions.Count % 2 == 0 ? "Black" : "White";
-        _stonePositions[(x, y)] = color;
+        _stonePositions[x, y] = new Stone { Color = _nextMover };
 
         // Draw the stone  
-        DrawStone(x, y, color, cellSize);
+        DrawStone(x, y, _nextMover, cellSize);
+
+        _nextMover = _nextMover == StoneColor.Black ? StoneColor.White : StoneColor.Black;
 
         // Check for dead stones and remove them  
         RemoveDeadStones();
@@ -126,26 +141,32 @@ public partial class MainWindow : Window
         var visited = new HashSet<(int, int)>();
         var toRemove = new List<(int, int)>();
 
-        foreach (var position in _stonePositions.Keys)
+        for (int x = 0; x < BoardSize; x++)
         {
-            if (!visited.Contains(position))
+            for (int y = 0; y < BoardSize; y++)
             {
-                var group = new List<(int, int)>();
-                var liberties = CalculateLiberties(position, group, visited);
-
-                if (liberties == 0)
+                if (_stonePositions[x, y] != null && !visited.Contains((x, y)))
                 {
-                    toRemove.AddRange(group);
+                    var group = new List<(int, int)>();
+                    var liberties = CalculateLiberties((x, y), group, visited);
+
+                    if (liberties == 0)
+                    {
+                        toRemove.AddRange(group);
+                    }
                 }
             }
         }
 
-        foreach (var pos in toRemove)
-        {
-            _stonePositions.Remove(pos);
-        }
+        if (toRemove.Count > 0)
+        { 
+            foreach (var (x, y) in toRemove)
+            {
+                _stonePositions[x, y] = null;
+            }
 
-        DrawGoBoard(); // Redraw the board to reflect changes  
+            DrawGoBoard(); // Redraw the board to reflect changes
+        }
     }
 
     private int CalculateLiberties((int x, int y) position, List<(int, int)> group, HashSet<(int, int)> visited)
@@ -155,7 +176,7 @@ public partial class MainWindow : Window
         visited.Add(position);
         group.Add(position);
 
-        string color = _stonePositions[position];
+        StoneColor color = _stonePositions[position.x, position.y].Color;
         int liberties = 0;
 
         while (stack.Count > 0)
@@ -167,11 +188,11 @@ public partial class MainWindow : Window
                 if (nx < 0 || nx >= BoardSize || ny < 0 || ny >= BoardSize)
                     continue;
 
-                if (!_stonePositions.ContainsKey((nx, ny)))
+                if (_stonePositions[nx, ny] == null)
                 {
                     liberties++;
                 }
-                else if (_stonePositions[(nx, ny)] == color && !visited.Contains((nx, ny)))
+                else if (_stonePositions[nx, ny].Color == color && !visited.Contains((nx, ny)))
                 {
                     visited.Add((nx, ny));
                     group.Add((nx, ny));
@@ -191,13 +212,13 @@ public partial class MainWindow : Window
         yield return (x, y + 1);
     }
 
-    private void DrawStone(int x, int y, string color, double cellSize)
+    private void DrawStone(int x, int y, StoneColor color, double cellSize)
     {
         var stone = new Ellipse
         {
             Width = cellSize * 0.8,
             Height = cellSize * 0.8,
-            Fill = color == "Black" ? Brushes.Black : Brushes.White,
+            Fill = color == StoneColor.Black ? Brushes.Black : Brushes.White,
             Stroke = Brushes.Black,
             StrokeThickness = 1
         };
@@ -207,3 +228,4 @@ public partial class MainWindow : Window
         GoBoard.Children.Add(stone);
     }
 }
+
