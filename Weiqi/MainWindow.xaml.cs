@@ -101,21 +101,94 @@ public partial class MainWindow : Window
             (GoBoard.ActualHeight - 2 * Margin) / (BoardSize - 1)
         );
 
-        // Get mouse position and calculate nearest grid point
+        // Get mouse position and calculate nearest grid point  
         Point clickPosition = e.GetPosition(GoBoard);
         int x = (int)Math.Round((clickPosition.X - Margin) / cellSize);
         int y = (int)Math.Round((clickPosition.Y - Margin) / cellSize);
 
-        // Ensure the click is within bounds
+        // Ensure the click is within bounds  
         if (x < 0 || x >= BoardSize || y < 0 || y >= BoardSize || _stonePositions.ContainsKey((x, y)))
             return;
 
-        // Alternate between black and white stones
+        // Alternate between black and white stones  
         string color = _stonePositions.Count % 2 == 0 ? "Black" : "White";
         _stonePositions[(x, y)] = color;
 
-        // Draw the stone
+        // Draw the stone  
         DrawStone(x, y, color, cellSize);
+
+        // Check for dead stones and remove them  
+        RemoveDeadStones();
+    }
+
+    private void RemoveDeadStones()
+    {
+        var visited = new HashSet<(int, int)>();
+        var toRemove = new List<(int, int)>();
+
+        foreach (var position in _stonePositions.Keys)
+        {
+            if (!visited.Contains(position))
+            {
+                var group = new List<(int, int)>();
+                var liberties = CalculateLiberties(position, group, visited);
+
+                if (liberties == 0)
+                {
+                    toRemove.AddRange(group);
+                }
+            }
+        }
+
+        foreach (var pos in toRemove)
+        {
+            _stonePositions.Remove(pos);
+        }
+
+        DrawGoBoard(); // Redraw the board to reflect changes  
+    }
+
+    private int CalculateLiberties((int x, int y) position, List<(int, int)> group, HashSet<(int, int)> visited)
+    {
+        var stack = new Stack<(int, int)>();
+        stack.Push(position);
+        visited.Add(position);
+        group.Add(position);
+
+        string color = _stonePositions[position];
+        int liberties = 0;
+
+        while (stack.Count > 0)
+        {
+            var (x, y) = stack.Pop();
+
+            foreach (var (nx, ny) in GetNeighbors(x, y))
+            {
+                if (nx < 0 || nx >= BoardSize || ny < 0 || ny >= BoardSize)
+                    continue;
+
+                if (!_stonePositions.ContainsKey((nx, ny)))
+                {
+                    liberties++;
+                }
+                else if (_stonePositions[(nx, ny)] == color && !visited.Contains((nx, ny)))
+                {
+                    visited.Add((nx, ny));
+                    group.Add((nx, ny));
+                    stack.Push((nx, ny));
+                }
+            }
+        }
+
+        return liberties;
+    }
+
+    private IEnumerable<(int, int)> GetNeighbors(int x, int y)
+    {
+        yield return (x - 1, y);
+        yield return (x + 1, y);
+        yield return (x, y - 1);
+        yield return (x, y + 1);
     }
 
     private void DrawStone(int x, int y, string color, double cellSize)
