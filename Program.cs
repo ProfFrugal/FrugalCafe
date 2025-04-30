@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Buffers;
 
 namespace FrugalCafe
 {
@@ -80,8 +81,37 @@ namespace FrugalCafe
             return max;
         }
 
+        static void TestArrayPool()
+        {
+            const int fixedLength = 314432;
+
+            var pool = ArrayPool<int>.Create(fixedLength, Environment.ProcessorCount);
+
+            int[] first = null;
+
+            for (int i = 0; i < 2; i++)
+            {
+                var buffer = pool.Rent(fixedLength);
+
+                if (first == null)
+                {
+                    first = buffer;
+                }
+                else
+                {
+                    bool same = object.ReferenceEquals(first, buffer);
+
+                    Console.WriteLine(same);
+                }
+
+                pool.Return(buffer);
+            }
+        }
+
         static void Main(string[] args)
         {
+            TestArrayPool();
+
             NGram.Test();
             return;
 
