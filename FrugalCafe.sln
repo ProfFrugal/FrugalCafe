@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeapWalker", "HeapWalker\He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeTax", "IncomeTax\IncomeTax.csproj", "{58B9A98A-0D85-4137-9FE2-F5C84CB747A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weiqi", "Weiqi\Weiqi.csproj", "{A309FC34-8323-4EA3-934E-1B9126060218}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{58B9A98A-0D85-4137-9FE2-F5C84CB747A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58B9A98A-0D85-4137-9FE2-F5C84CB747A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58B9A98A-0D85-4137-9FE2-F5C84CB747A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A309FC34-8323-4EA3-934E-1B9126060218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A309FC34-8323-4EA3-934E-1B9126060218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A309FC34-8323-4EA3-934E-1B9126060218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A309FC34-8323-4EA3-934E-1B9126060218}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
