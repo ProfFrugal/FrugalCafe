@@ -8,6 +8,8 @@ namespace Weiqi;
 
 public enum StoneColor
 {
+    Invalid,
+    Empty,
     Black,
     White
 }
@@ -23,7 +25,9 @@ public class Stone
 public partial class MainWindow : Window
 {
     private const int BoardSize = 19;
-    private const double Margin = 20;
+    private const double BoardMargin = 20;
+
+    private static (int x, int y)[] _directions = { (-1, 0), (1, 0), (0, -1), (0, 1) };
 
     private readonly Stone?[,] _stonePositions = new Stone[BoardSize, BoardSize]; // Stores stone objects  
     private StoneColor _nextMover = StoneColor.Black; 
@@ -43,8 +47,8 @@ public partial class MainWindow : Window
 
         // Calculate cell size dynamically based on window size  
         double cellSize = Math.Min(
-            (GoBoard.ActualWidth - 2 * Margin) / (BoardSize - 1),
-            (GoBoard.ActualHeight - 2 * Margin) / (BoardSize - 1)
+            (GoBoard.ActualWidth - 2 * BoardMargin) / (BoardSize - 1),
+            (GoBoard.ActualHeight - 2 * BoardMargin) / (BoardSize - 1)
         );
 
         for (int i = 0; i < BoardSize; i++)
@@ -52,10 +56,10 @@ public partial class MainWindow : Window
             // Draw vertical lines  
             var verticalLine = new Line
             {
-                X1 = Margin + i * cellSize,
-                Y1 = Margin,
-                X2 = Margin + i * cellSize,
-                Y2 = Margin + (BoardSize - 1) * cellSize,
+                X1 = BoardMargin + i * cellSize,
+                Y1 = BoardMargin,
+                X2 = BoardMargin + i * cellSize,
+                Y2 = BoardMargin + (BoardSize - 1) * cellSize,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
@@ -64,10 +68,10 @@ public partial class MainWindow : Window
             // Draw horizontal lines  
             var horizontalLine = new Line
             {
-                X1 = Margin,
-                Y1 = Margin + i * cellSize,
-                X2 = Margin + (BoardSize - 1) * cellSize,
-                Y2 = Margin + i * cellSize,
+                X1 = BoardMargin,
+                Y1 = BoardMargin + i * cellSize,
+                X2 = BoardMargin + (BoardSize - 1) * cellSize,
+                Y2 = BoardMargin + i * cellSize,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
@@ -88,8 +92,8 @@ public partial class MainWindow : Window
                     Fill = Brushes.Black
                 };
 
-                Canvas.SetLeft(starPoint, Margin + x * cellSize - starPoint.Width / 2);
-                Canvas.SetTop(starPoint, Margin + y * cellSize - starPoint.Height / 2);
+                Canvas.SetLeft(starPoint, BoardMargin + x * cellSize - starPoint.Width / 2);
+                Canvas.SetTop(starPoint, BoardMargin + y * cellSize - starPoint.Height / 2);
                 GoBoard.Children.Add(starPoint);
             }
         }
@@ -111,14 +115,14 @@ public partial class MainWindow : Window
     {
         // Calculate cell size dynamically based on window size  
         double cellSize = Math.Min(
-            (GoBoard.ActualWidth - 2 * Margin) / (BoardSize - 1),
-            (GoBoard.ActualHeight - 2 * Margin) / (BoardSize - 1)
+            (GoBoard.ActualWidth - 2 * BoardMargin) / (BoardSize - 1),
+            (GoBoard.ActualHeight - 2 * BoardMargin) / (BoardSize - 1)
         );
 
         // Get mouse position and calculate nearest grid point  
         Point clickPosition = e.GetPosition(GoBoard);
-        int x = (int)Math.Round((clickPosition.X - Margin) / cellSize);
-        int y = (int)Math.Round((clickPosition.Y - Margin) / cellSize);
+        int x = (int)Math.Round((clickPosition.X - BoardMargin) / cellSize);
+        int y = (int)Math.Round((clickPosition.Y - BoardMargin) / cellSize);
 
         // Ensure the click is within bounds  
         if (x < 0 || x >= BoardSize || y < 0 || y >= BoardSize || _stonePositions[x, y] != null)
@@ -130,25 +134,29 @@ public partial class MainWindow : Window
         // Draw the stone  
         DrawStone(x, y, _nextMover, cellSize);
 
-        _nextMover = _nextMover == StoneColor.Black ? StoneColor.White : StoneColor.Black;
-
         // Check for dead stones and remove them  
-        RemoveDeadStones();
+        RemoveDeadStones(x, y, _nextMover);
+
+        _nextMover = _nextMover == StoneColor.Black ? StoneColor.White : StoneColor.Black;
     }
 
-    private void RemoveDeadStones()
+    private void RemoveDeadStones(int x, int y, StoneColor color)
     {
         var visited = new HashSet<(int, int)>();
         var toRemove = new List<(int, int)>();
 
-        for (int x = 0; x < BoardSize; x++)
+        foreach (var diff in _directions)
         {
-            for (int y = 0; y < BoardSize; y++)
+            int x0 = x + diff.Item1;
+
+            if (x0 >= 0 && x0 < BoardSize)
             {
-                if (_stonePositions[x, y] != null && !visited.Contains((x, y)))
+                int y0 = y + diff.Item2;
+
+                if (y0 >= 0 && y0 < BoardSize && _stonePositions[x0, y0] != null && _stonePositions[x0, y0].Color != color)
                 {
                     var group = new List<(int, int)>();
-                    var liberties = CalculateLiberties((x, y), group, visited);
+                    var liberties = CalculateLiberties((x0, y0), group, visited);
 
                     if (liberties == 0)
                     {
@@ -160,9 +168,9 @@ public partial class MainWindow : Window
 
         if (toRemove.Count > 0)
         { 
-            foreach (var (x, y) in toRemove)
+            foreach (var (_x, _y) in toRemove)
             {
-                _stonePositions[x, y] = null;
+                _stonePositions[_x, _y] = null;
             }
 
             DrawGoBoard(); // Redraw the board to reflect changes
@@ -223,8 +231,8 @@ public partial class MainWindow : Window
             StrokeThickness = 1
         };
 
-        Canvas.SetLeft(stone, Margin + x * cellSize - stone.Width / 2);
-        Canvas.SetTop(stone, Margin + y * cellSize - stone.Height / 2);
+        Canvas.SetLeft(stone, BoardMargin + x * cellSize - stone.Width / 2);
+        Canvas.SetTop(stone, BoardMargin + y * cellSize - stone.Height / 2);
         GoBoard.Children.Add(stone);
     }
 }
